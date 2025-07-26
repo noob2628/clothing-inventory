@@ -1,0 +1,16 @@
+{
+  // Let the Tailwind plugin handle CSS validation
+  "css.validate": false,
+  "scss.validate": false,
+  "less.validate": false,
+
+  // Tell the Tailwind extension which filetypes to activate on
+  "tailwindCSS.includeLanguages": {
+    "css": "css",
+    "javascript": "javascript",
+    "javascriptreact": "javascript",
+    "typescript": "javascript",
+    "typescriptreact": "javascript",
+    "html": "html"
+  }
+}
