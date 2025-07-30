@@ -1,14 +1,17 @@
 // src/app/api/products/[id]/route.js
-import { readData, writeData } from '@/lib/db';
+import { 
+  getProductById, 
+  updateProduct, 
+  deleteProduct 
+} from '@/lib/db';
 
-// Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
 export async function GET(request, { params }) {
   try {
-    const id = params.id;
-    const db = await readData();
-    const product = db.products.find(p => p.id === id);
+    // Await params access
+    const id = request.nextUrl.pathname.split('/').pop();
+    const product = await getProductById(id);
     
     if (!product) {
       return Response.json({ message: 'Product not found' }, { status: 404 });
@@ -22,18 +25,16 @@ export async function GET(request, { params }) {
 
 export async function PUT(request, { params }) {
   try {
-    const id = params.id;
+    // Await params access
+    const id = request.nextUrl.pathname.split('/').pop();
     const updated = await request.json();
-    const db = await readData();
     
-    const index = db.products.findIndex(p => p.id === id);
-    if (index === -1) {
+    const updatedProduct = await updateProduct(id, updated);
+    if (!updatedProduct) {
       return Response.json({ message: 'Product not found' }, { status: 404 });
     }
     
-    db.products[index] = { ...db.products[index], ...updated };
-    await writeData(db);
-    return Response.json(db.products[index]);
+    return Response.json(updatedProduct);
   } catch (error) {
     console.error('Error updating product:', error);
     return Response.json({ message: 'Internal server error' }, { status: 500 });
@@ -42,16 +43,9 @@ export async function PUT(request, { params }) {
 
 export async function DELETE(request, { params }) {
   try {
-    const id = params.id;
-    const db = await readData();
-    
-    const index = db.products.findIndex(p => p.id === id);
-    if (index === -1) {
-      return Response.json({ message: 'Product not found' }, { status: 404 });
-    }
-    
-    db.products.splice(index, 1);
-    await writeData(db);
+    // Await params access
+    const id = request.nextUrl.pathname.split('/').pop();
+    await deleteProduct(id);
     return new Response(null, { status: 204 });
   } catch (error) {
     console.error('Error deleting product:', error);
