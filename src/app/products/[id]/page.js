@@ -1,12 +1,20 @@
-// src/app/products/[id]/page.js
 'use client';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { sizeFields, getLabel } from '@/lib/sizeFields';
+import dynamic from 'next/dynamic';
+import styles from './ProductDetail.module.css';
+
+// Dynamically import client-only components
+const ImageGallery = dynamic(
+  () => import('react-image-gallery').then(mod => mod.default),
+  { ssr: false, loading: () => <p>Loading gallery...</p> }
+);
 
 export default function ProductDetail() {
   const { id } = useParams();
+  const router = useRouter();
   const [product, setProduct] = useState(null);
   const [error, setError] = useState(null);
 
@@ -32,7 +40,12 @@ export default function ProductDetail() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-red-500 mb-4">Error: {error}</div>
-        <Link href="/" className="text-blue-500">&larr; Back to Products</Link>
+        <button 
+          onClick={() => router.push('/')}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Back to Home
+        </button>
       </div>
     );
   }
@@ -40,77 +53,118 @@ export default function ProductDetail() {
   if (!product) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-lg">Loading product data...</div>
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent"></div>
+        </div>
       </div>
     );
   }
 
+  const productImages = product.productImages.map(img => ({
+    original: img,
+    thumbnail: img
+  }));
+
+  const fabricImages = product.fabricImages.map(img => ({
+    original: img,
+    thumbnail: img
+  }));
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
-        <Link href="/" className="text-blue-500">&larr; Back to Products</Link>
+    <div className={styles.container}>
+      <div className={styles.backButton}>
+        <Link href="/" className={styles.backLink}>
+          &larr; Back to Products
+        </Link>
       </div>
 
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="md:flex">
-          <div className="md:w-1/2 p-6">
-            <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-            <p className="text-gray-600 mb-1">SKU: {product.sku}</p>
-            <p className="text-gray-600 mb-1">Code: {product.code}</p>
-            <p className="text-gray-600 mb-4">Variation: {product.variations}</p>
-
-            <div className="mb-6">
-                <h2 className="text-xl font-semibold mb-2">Size Measurements (cm)</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {sizeFields[product.category].map(field => (
-                    <div key={field} className="border p-3 rounded">
-                        <div className="font-medium">{getLabel(field)}</div>
-                        <div>{product.sizes[field] || 0}</div>
-                    </div>
-                    ))}
-                </div>
+      <div className={styles.card}>
+        <div className={styles.cardGrid}>
+          <div className={styles.detailsSection}>
+            <h1 className={styles.productTitle}>{product.name}</h1>
+            <p className={styles.productMeta}>SKU: {product.sku}</p>
+            <p className={styles.productMeta}>Code: {product.code}</p>
+            <p className={styles.productMeta}>Category: {product.category}</p>
+            
+            <div className={styles.variations}>
+              <h2 className={styles.sectionTitle}>Variations</h2>
+              <div className={styles.variationGrid}>
+                {product.variations.map((variation, i) => (
+                  <span key={i} className={styles.variationTag}>
+                    {variation}
+                  </span>
+                ))}
+              </div>
             </div>
 
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-2">Suppliers</h2>
-              <ul className="list-disc pl-5">
+            <div className={styles.measurements}>
+              <h2 className={styles.sectionTitle}>Size Measurements (cm)</h2>
+              <div className={styles.measurementGrid}>
+                {sizeFields[product.category].map(field => (
+                  <div key={field} className={styles.measurementItem}>
+                    <div className={styles.measurementLabel}>{getLabel(field)}</div>
+                    <div className={styles.measurementValue}>
+                      {product.sizes[field] || 0}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.suppliers}>
+              <h2 className={styles.sectionTitle}>Suppliers</h2>
+              <ul className={styles.supplierList}>
                 {product.suppliers.map((supplier, i) => (
-                  <li key={i}>{supplier}</li>
+                  <li key={i} className={styles.supplierItem}>
+                    {supplier}
+                  </li>
                 ))}
               </ul>
             </div>
 
             <Link 
               href={`/products/${product.id}/edit`} 
-              className="bg-yellow-500 text-white px-4 py-2 rounded mr-2"
+              className={styles.editButton}
             >
               Edit Product
             </Link>
           </div>
 
-          <div className="md:w-1/2 p-6">
-            <h2 className="text-xl font-semibold mb-2">Product Images</h2>
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              {product.productImages.map((img, i) => (
-                <img 
-                  key={i} 
-                  src={img} 
-                  alt={`Product ${i+1}`} 
-                  className="rounded object-cover h-48 w-full"
+          <div className={styles.imagesSection}>
+            <div className={styles.galleryContainer}>
+              <h2 className={styles.sectionTitle}>Product Images</h2>
+              {productImages.length > 0 ? (
+                <ImageGallery
+                  items={productImages}
+                  showPlayButton={false}
+                  showFullscreenButton={true}
+                  showNav={true}
+                  showBullets={true}
                 />
-              ))}
+              ) : (
+                <div className={styles.emptyGallery}>
+                  <div className={styles.placeholderIcon}>👕</div>
+                  <p>No product images available</p>
+                </div>
+              )}
             </div>
 
-            <h2 className="text-xl font-semibold mb-2">Fabric Images</h2>
-            <div className="grid grid-cols-2 gap-4">
-              {product.fabricImages.map((img, i) => (
-                <img 
-                  key={i} 
-                  src={img} 
-                  alt={`Fabric ${i+1}`} 
-                  className="rounded object-cover h-48 w-full"
+            <div className={styles.galleryContainer}>
+              <h2 className={styles.sectionTitle}>Fabric Images</h2>
+              {fabricImages.length > 0 ? (
+                <ImageGallery
+                  items={fabricImages}
+                  showPlayButton={false}
+                  showFullscreenButton={true}
+                  showNav={true}
+                  showBullets={true}
                 />
-              ))}
+              ) : (
+                <div className={styles.emptyGallery}>
+                  <div className={styles.placeholderIcon}>🧵</div>
+                  <p>No fabric images available</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

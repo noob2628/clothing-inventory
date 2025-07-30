@@ -1,6 +1,10 @@
 // components/ProductForm.js
 import { useState } from 'react';
-import { sizeFields, getLabel } from '@/lib/sizeFields';
+import { Button, TextField, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { getLabel } from '@/lib/sizeFields';
+import styles from './ProductForm.module.css';
 
 const ProductForm = ({ initialData = {}, onSubmit }) => {
   const defaultProduct = {
@@ -81,61 +85,74 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Product Details */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label>SKU</label>
-          <input 
-            type="text" 
-            name="sku" 
-            value={formData.sku} 
-            onChange={handleChange} 
-            required 
-            className="w-full p-2 border rounded"
-          />
-        </div>
-        <div>
-          <label>Name</label>
-          <input 
-            type="text" 
-            name="name" 
-            value={formData.name} 
-            onChange={handleChange} 
-            required 
-            className="w-full p-2 border rounded"
-          />
-        </div>
-        <div>
-          <label>Code</label>
-          <input 
-            type="text" 
-            name="code" 
-            value={formData.code} 
-            onChange={handleChange} 
-            required 
-            className="w-full p-2 border rounded"
-          />
-        </div>
-        <div>
-          <label>Category</label>
-          <select 
-            name="category" 
-            value={formData.category} 
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Product Information</h2>
+        <div className={styles.grid}>
+          <TextField
+            label="SKU"
+            name="sku"
+            value={formData.sku}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
-          >
-            <option value="TOPS">Tops</option>
-            <option value="PANTS/SHORT">Pants/Short</option>
-            <option value="SKIRT">Skirt</option>
-            <option value="DRESS">Dress</option>
-          </select>
+            required
+            fullWidth
+          />
+          <TextField
+            label="Name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            fullWidth
+          />
+          <TextField
+            label="Code"
+            name="code"
+            value={formData.code}
+            onChange={handleChange}
+            required
+            fullWidth
+          />
+          <FormControl fullWidth>
+            <InputLabel>Category</InputLabel>
+            <Select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              label="Category"
+            >
+              <MenuItem value="TOPS">Tops</MenuItem>
+              <MenuItem value="PANTS/SHORT">Pants/Short</MenuItem>
+              <MenuItem value="SKIRT">Skirt</MenuItem>
+              <MenuItem value="DRESS">Dress</MenuItem>
+            </Select>
+          </FormControl>
         </div>
       </div>
 
+      {/* Sizes */}
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Size Measurements (cm)</h2>
+        <div className={styles.sizeGrid}>
+          {sizeFields[formData.category].map(field => (
+            <TextField
+              key={field}
+              label={getLabel(field)}
+              name={field}
+              type="number"
+              value={formData.sizes[field] || 0}
+              onChange={handleSizeChange}
+              InputProps={{ inputProps: { step: 0.1 } }}
+              fullWidth
+            />
+          ))}
+        </div>
+      </div>
+
+
       {/* Variations */}
       <div>
-        <label>Variations</label>
+        <label >Variations</label>
         {formData.variations.map((variation, index) => (
           <div key={index} className="flex mb-2">
             <input
@@ -224,7 +241,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
       </div>
 
       {/* Suppliers */}
-      <div>
+      <div className={styles.section}>
         <label>Suppliers</label>
         {formData.suppliers.map((supplier, index) => (
           <div key={index} className="flex mb-2">
@@ -253,29 +270,13 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
         </button>
       </div>
 
-      {/* Sizes */}
-      <div className="border-t pt-4 mt-6">
-        <h2 className="text-xl font-semibold mb-4">Size Measurements (cm)</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {sizeFields[formData.category].map(field => (
-            <div key={field}>
-                <label>{getLabel(field)}</label>
-                <input
-                type="number"
-                name={field}
-                value={formData.sizes[field] || 0}
-                onChange={handleSizeChange}
-                step="0.1"
-                className="w-full p-2 border rounded"
-                />
-            </div>
-            ))}
-        </div>
-      </div>
-
-      <button type="submit" className="w-full py-3 bg-green-600 text-white rounded">
+      <Button 
+        type="submit" 
+        variant="contained" 
+        className={styles.submitButton}
+      >
         {initialData.id ? 'Update Product' : 'Create Product'}
-      </button>
+      </Button>
     </form>
   );
 };

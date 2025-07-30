@@ -1,10 +1,15 @@
-//
+//src/app/page.js
 'use client';
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { styled } from '@mui/material/styles';
+import { Fab } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import SearchBar from '@/components/SearchBar';
+import ProductCard from '@/components/ProductCard';
 
 export default function Home() {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     fetchProducts();
@@ -14,60 +19,75 @@ export default function Home() {
     const res = await fetch('/api/products');
     const data = await res.json();
     setProducts(data);
+    setFilteredProducts(data);
   };
 
-  const deleteProduct = async (id) => {
-    await fetch(`/api/products/${id}`, { method: 'DELETE' });
-    fetchProducts();
+  const handleSearch = (term) => {
+    if (!term) {
+      setFilteredProducts(products);
+      return;
+    }
+    
+    const filtered = products.filter(product => 
+      product.name.toLowerCase().includes(term.toLowerCase()) ||
+      product.sku.toLowerCase().includes(term.toLowerCase()) ||
+      product.category.toLowerCase().includes(term.toLowerCase())
+    );
+    
+    setFilteredProducts(filtered);
   };
 
   return (
-    <div className="container mx-auto px-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Clothing Inventory</h1>
-        <Link href="/create" className="bg-blue-500 text-white px-4 py-2 rounded">
-          Add New Product
-        </Link>
+    <div className="container py-8">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Product Catalog</h1>
+        <SearchBar onSearch={handleSearch} />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map(product => (
-          <div key={product.id} className="border rounded-lg overflow-hidden shadow-lg">
-            {product.productImages[0] && (
-                <img 
-                src={product.productImages[0]} 
-                alt={product.name} 
-                className="w-full h-48 object-cover"
-                />
-            )}
-            <div className="p-4">
-                <h2 className="text-xl font-bold">{product.name}</h2>
-                <p className="text-gray-600">{product.sku} | {product.category}</p>
-              
-              <div className="mt-4 flex space-x-2">
-                <Link 
-                  href={`/products/${product.id}`} 
-                  className="flex-1 text-center bg-green-500 text-white py-2 rounded"
-                >
-                  View
-                </Link>
-                <Link 
-                  href={`/products/${product.id}/edit`}
-                  className="flex-1 text-center bg-yellow-500 text-white py-2 rounded"
-                >
-                  Edit
-                </Link>
-                <button 
-                  onClick={() => deleteProduct(product.id)}
-                  className="flex-1 bg-red-500 text-white py-2 rounded"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      {filteredProducts.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {filteredProducts.map(product => (
+            <ProductCard 
+              key={product.id} 
+              product={product} 
+              onDelete={fetchProducts}
+            />
+          ))}
+        </div>
+      )}
+
+      <FloatingButton href="/create">
+        <AddIcon />
+      </FloatingButton>
     </div>
   );
 }
+
+const EmptyState = () => (
+  <div className="text-center py-20">
+    <div className="text-5xl mb-4">👗</div>
+    <h3 className="text-xl font-semibold mb-2">No products found</h3>
+    <p className="text-light-text mb-4">
+      Try adjusting your search or create a new product
+    </p>
+    <a 
+      href="/create" 
+      className="inline-block bg-accent text-white px-6 py-2 rounded-full font-medium"
+    >
+      Add Product
+    </a>
+  </div>
+);
+
+const FloatingButton = styled(Fab)({
+  position: 'fixed',
+  bottom: '30px',
+  right: '30px',
+  backgroundColor: 'var(--accent)',
+  color: 'white',
+  '&:hover': {
+    backgroundColor: '#c0392b',
+  },
+});

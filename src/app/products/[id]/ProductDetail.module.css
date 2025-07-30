@@ -1,0 +1,159 @@
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.backButton {
+  margin-bottom: 1.5rem;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  color: #2d2d2d;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #e74c3c;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .cardGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.detailsSection {
+  padding: 2rem;
+}
+
+.imagesSection {
+  padding: 2rem;
+  background: #f8f8f8;
+}
+
+.productTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #2d2d2d;
+}
+
+.productMeta {
+  color: #777;
+  margin-bottom: 0.5rem;
+}
+
+.sectionTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.5rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  color: #2d2d2d;
+}
+
+.variationGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.variationTag {
+  background: #f0f0f0;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+}
+
+.measurementGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.measurementItem {
+  background: #f8f8f8;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.measurementLabel {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #555;
+}
+
+.measurementValue {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2d2d2d;
+}
+
+.supplierList {
+  list-style: none;
+  padding-left: 0;
+}
+
+.supplierItem {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.supplierItem:last-child {
+  border-bottom: none;
+}
+
+.editButton {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #f39c12;
+  color: white;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.editButton:hover {
+  background: #e67e22;
+}
+
+.galleryContainer {
+  margin-bottom: 2rem;
+}
+
+.emptyGallery {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  background: white;
+  border-radius: 8px;
+  color: #777;
+}
+
+.placeholderIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
