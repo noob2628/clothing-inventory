@@ -1,6 +1,6 @@
 // components/ProductForm.js
 import { useState } from 'react';
-import { sizeFields, getLabel } from '../lib/sizeFields';
+import { sizeFields, getLabel } from '@/lib/sizeFields';
 
 const ProductForm = ({ initialData = {}, onSubmit }) => {
   const defaultProduct = {

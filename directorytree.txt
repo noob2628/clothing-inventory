@@ -1,25 +1,20 @@
-clothing-inventory/
-├── node_modules/
-├── public/
-├── data/
-│   └── db.json
-├── lib/
-│   └── sizeFields.js
-├── components/
-│   └── ProductForm.js
-├── pages/
-│   ├── api/
-│   │   ├── products/
-│   │   │   └── [id].js
-│   │   └── products.js
-│   ├── products/
-│   │   └── [id].js
-│   ├── create.js
-│   ├── edit/
-│   │   └── [id].js
-│   └── index.js
-├── styles/
-│   └── globals.css
-├── .gitignore
-├── package.json
-└── README.md
+└── src/
+    └── app/
+        ├── api/
+        │   └── products/
+        │       ├── route.js
+        │       └── [id]/
+        │           └── route.js
+        ├── components/
+        │   └── ProductForm.js
+        ├── lib/
+        │   ├── db.js
+        │   └── sizeFields.js
+        ├── products/
+        │   └── [id]/
+        │       ├── page.js
+        │       └── edit/
+        │           └── page.js
+        ├── create/
+        │   └── page.js
+        └── page.js

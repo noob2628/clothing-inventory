@@ -1,4 +1,4 @@
-// lib/sizeFields.js
+// src/app/lib/sizeFields.js
 export const sizeFields = {
   TOPS: ['shoulder', 'armhole', 'sleeve', 'sleeveHole', 'underarmSleeve', 'bust', 'middleWidth', 'lowerWidth', 'sideLength', 'middleLength'],
   'PANTS/SHORT': ['waist', 'length', 'inseam', 'fRise', 'leghole', 'hips'],

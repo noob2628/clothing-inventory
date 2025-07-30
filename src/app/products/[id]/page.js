@@ -1,24 +1,49 @@
-import { useRouter } from 'next/router';
+// src/app/products/[id]/page.js
+'use client';
+import { useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import Link from 'next/link';
-import { sizeFields, getLabel } from '../../lib/sizeFields';
-
+import { sizeFields, getLabel } from '@/lib/sizeFields';
 
 export default function ProductDetail() {
-  const router = useRouter();
-  const { id } = router.query;
+  const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const res = await axios.get(`/api/products/${id}`);
-      setProduct(res.data);
+      try {
+        const res = await fetch(`/api/products/${id}`);
+        if (!res.ok) {
+          throw new Error(`Failed to fetch product: ${res.status}`);
+        }
+        const data = await res.json();
+        setProduct(data);
+      } catch (err) {
+        console.error(err);
+        setError(err.message);
+      }
     };
+    
     if (id) fetchProduct();
   }, [id]);
 
-  if (!product) return <div>Loading...</div>;
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-red-500 mb-4">Error: {error}</div>
+        <Link href="/" className="text-blue-500">&larr; Back to Products</Link>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-lg">Loading product data...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -56,7 +81,7 @@ export default function ProductDetail() {
             </div>
 
             <Link 
-              href={`/edit/${product.id}`} 
+              href={`/products/${product.id}/edit`} 
               className="bg-yellow-500 text-white px-4 py-2 rounded mr-2"
             >
               Edit Product

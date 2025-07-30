@@ -1,5 +1,6 @@
+//
+'use client';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import Link from 'next/link';
 
 export default function Home() {
@@ -10,12 +11,13 @@ export default function Home() {
   }, []);
 
   const fetchProducts = async () => {
-    const res = await axios.get('/api/products');
-    setProducts(res.data);
+    const res = await fetch('/api/products');
+    const data = await res.json();
+    setProducts(data);
   };
 
   const deleteProduct = async (id) => {
-    await axios.delete(`/api/products/${id}`);
+    await fetch(`/api/products/${id}`, { method: 'DELETE' });
     fetchProducts();
   };
 
@@ -50,7 +52,7 @@ export default function Home() {
                   View
                 </Link>
                 <Link 
-                  href={`/edit/${product.id}`} 
+                  href={`/products/${product.id}/edit`}
                   className="flex-1 text-center bg-yellow-500 text-white py-2 rounded"
                 >
                   Edit
