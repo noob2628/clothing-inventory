@@ -4,7 +4,7 @@ import Head from 'next/head';
 import SearchBar from './components/SearchBar';
 
 export const metadata = {
-  title: 'Fashion Inventory',
+  title: 'Kily Clothing Inventory',
   description: 'Premium clothing management system',
 };
 
@@ -12,6 +12,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <Head>
+        <link rel="icon" href="/kily.ph.webp" />
         {/* Head content moved to _document.js for custom fonts */}
       </Head>
       <body className="min-h-screen bg-gray-50">
@@ -26,7 +27,7 @@ const Header = () => (
     <div className="header-content">
       <div className="brand">
         <div className="logo">F</div>
-        <h1 className="title">Fashion Inventory</h1>
+        <h1 className="title">Kily Clothing Inventory</h1>
       </div>
       <nav className="nav-links">
         <NavLink href="/">Dashboard</NavLink>
@@ -45,7 +46,7 @@ const NavLink = ({ href, children }) => (
 const Footer = () => (
   <footer className="bg-primary text-white py-8 mt-12">
     <div className="container text-center">
-      <p>© 2025 Fashion Inventory System. All rights reserved.</p>
+      <p>© 2025 Kily Clothing Inventory System. All rights reserved.</p>
     </div>
   </footer>
 );

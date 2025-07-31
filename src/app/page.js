@@ -1,6 +1,5 @@
 //src/app/page.js
 'use client';
-'use client';
 import { useState, useEffect, useRef } from 'react';
 import { styled } from '@mui/material/styles';
 import { Fab } from '@mui/material';
