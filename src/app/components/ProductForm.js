@@ -1,6 +1,16 @@
 // src/app/components/ProductForm.js
 import { useState } from 'react';
-import { Button, TextField, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { 
+  Button, 
+  TextField, 
+  Select, 
+  MenuItem, 
+  InputLabel, 
+  FormControl,
+  Grid,
+  IconButton,
+  Typography
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { getLabel } from '@/lib/sizeFields';
@@ -17,7 +27,6 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
     category: 'TOPS',
     suppliers: [],
     sizes: {
-      // All size fields initialized to 0
       shoulder: 0,
       armhole: 0,
       sleeve: 0,
@@ -86,8 +95,11 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
+      {/* Product Information */}
       <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Product Information</h2>
+        <Typography variant="h6" className={styles.sectionTitle}>
+          Product Information
+        </Typography>
         <div className={styles.grid}>
           <TextField
             label="SKU"
@@ -130,9 +142,11 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
         </div>
       </div>
 
-      {/* Sizes */}
+      {/* Size Measurements */}
       <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Size Measurements (cm)</h2>
+        <Typography variant="h6" className={styles.sectionTitle}>
+          Size Measurements (cm)
+        </Typography>
         <div className={styles.sizeGrid}>
           {sizeFields[formData.category].map(field => (
             <TextField
@@ -149,131 +163,151 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
         </div>
       </div>
 
-
       {/* Variations */}
       <div className={styles.section}>
-        <label >Variations</label>
+        <Typography variant="h6" className={styles.sectionTitle}>
+          Variations
+        </Typography>
         {formData.variations.map((variation, index) => (
-          <div key={index} className="flex mb-2">
-            <input
-              type="text"
-              value={variation}
-              onChange={(e) => handleArrayChange('variations', index, e.target.value)}
-              className="flex-1 p-2 border rounded"
-              placeholder="Variation name"
-            />
-            <button 
-              type="button" 
-              onClick={() => removeArrayItem('variations', index)}
-              className="ml-2 px-3 bg-red-500 text-white rounded"
-            >
-              Remove
-            </button>
-          </div>
+          <Grid container spacing={2} alignItems="center" key={index} className={styles.arrayItem}>
+            <Grid item xs={10}>
+              <TextField
+                fullWidth
+                value={variation}
+                onChange={(e) => handleArrayChange('variations', index, e.target.value)}
+                placeholder="Variation name"
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <IconButton 
+                onClick={() => removeArrayItem('variations', index)}
+                color="error"
+              >
+                <RemoveIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
         ))}
-        <button 
-          type="button" 
+        <Button 
+          startIcon={<AddIcon />}
           onClick={() => addArrayItem('variations')}
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+          variant="outlined"
+          className={styles.addButton}
         >
           Add Variation
-        </button>
+        </Button>
       </div>
 
       {/* Product Images */}
       <div className={styles.section}>
-        <label>Product Images</label>
+        <Typography variant="h6" className={styles.sectionTitle}>
+          Product Images
+        </Typography>
         {formData.productImages.map((img, index) => (
-          <div key={index} className="flex mb-2">
-            <input
-              type="text"
-              value={img}
-              onChange={(e) => handleArrayChange('productImages', index, e.target.value)}
-              className="flex-1 p-2 border rounded"
-              placeholder="Image URL"
-            />
-            <button 
-              type="button" 
-              onClick={() => removeArrayItem('productImages', index)}
-              className="ml-2 px-3 bg-red-500 text-white rounded"
-            >
-              Remove
-            </button>
-          </div>
+          <Grid container spacing={2} alignItems="center" key={index} className={styles.arrayItem}>
+            <Grid item xs={10}>
+              <TextField
+                fullWidth
+                value={img}
+                onChange={(e) => handleArrayChange('productImages', index, e.target.value)}
+                placeholder="Image URL"
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <IconButton 
+                onClick={() => removeArrayItem('productImages', index)}
+                color="error"
+              >
+                <RemoveIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
         ))}
-        <button 
-          type="button" 
+        <Button 
+          startIcon={<AddIcon />}
           onClick={() => addArrayItem('productImages')}
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+          variant="outlined"
+          className={styles.addButton}
         >
           Add Image
-        </button>
+        </Button>
       </div>
 
       {/* Fabric Images */}
       <div className={styles.section}>
-        <label>Fabric Images</label>
+        <Typography variant="h6" className={styles.sectionTitle}>
+          Fabric Images
+        </Typography>
         {formData.fabricImages.map((img, index) => (
-          <div key={index} className="flex mb-2">
-            <input
-              type="text"
-              value={img}
-              onChange={(e) => handleArrayChange('fabricImages', index, e.target.value)}
-              className="flex-1 p-2 border rounded"
-              placeholder="Image URL"
-            />
-            <button 
-              type="button" 
-              onClick={() => removeArrayItem('fabricImages', index)}
-              className="ml-2 px-3 bg-red-500 text-white rounded"
-            >
-              Remove
-            </button>
-          </div>
+          <Grid container spacing={2} alignItems="center" key={index} className={styles.arrayItem}>
+            <Grid item xs={10}>
+              <TextField
+                fullWidth
+                value={img}
+                onChange={(e) => handleArrayChange('fabricImages', index, e.target.value)}
+                placeholder="Image URL"
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <IconButton 
+                onClick={() => removeArrayItem('fabricImages', index)}
+                color="error"
+              >
+                <RemoveIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
         ))}
-        <button 
-          type="button" 
+        <Button 
+          startIcon={<AddIcon />}
           onClick={() => addArrayItem('fabricImages')}
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+          variant="outlined"
+          className={styles.addButton}
         >
           Add Image
-        </button>
+        </Button>
       </div>
 
       {/* Suppliers */}
       <div className={styles.section}>
-        <label>Suppliers</label>
+        <Typography variant="h6" className={styles.sectionTitle}>
+          Suppliers
+        </Typography>
         {formData.suppliers.map((supplier, index) => (
-          <div key={index} className="flex mb-2">
-            <input
-              type="text"
-              value={supplier}
-              onChange={(e) => handleArrayChange('suppliers', index, e.target.value)}
-              className="flex-1 p-2 border rounded"
-              placeholder="Supplier name"
-            />
-            <button 
-              type="button" 
-              onClick={() => removeArrayItem('suppliers', index)}
-              className="ml-2 px-3 bg-red-500 text-white rounded"
-            >
-              Remove
-            </button>
-          </div>
+          <Grid container spacing={2} alignItems="center" key={index} className={styles.arrayItem}>
+            <Grid item xs={10}>
+              <TextField
+                fullWidth
+                value={supplier}
+                onChange={(e) => handleArrayChange('suppliers', index, e.target.value)}
+                placeholder="Supplier name"
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <IconButton 
+                onClick={() => removeArrayItem('suppliers', index)}
+                color="error"
+              >
+                <RemoveIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
         ))}
-        <button 
-          type="button" 
+        <Button 
+          startIcon={<AddIcon />}
           onClick={() => addArrayItem('suppliers')}
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+          variant="outlined"
+          className={styles.addButton}
         >
           Add Supplier
-        </button>
+        </Button>
       </div>
 
       <Button 
         type="submit" 
         variant="contained" 
         className={styles.submitButton}
+        fullWidth
       >
         {initialData.id ? 'Update Product' : 'Create Product'}
       </Button>
