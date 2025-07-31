@@ -151,7 +151,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
 
 
       {/* Variations */}
-      <div>
+      <div className={styles.section}>
         <label >Variations</label>
         {formData.variations.map((variation, index) => (
           <div key={index} className="flex mb-2">
@@ -181,7 +181,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
       </div>
 
       {/* Product Images */}
-      <div>
+      <div className={styles.section}>
         <label>Product Images</label>
         {formData.productImages.map((img, index) => (
           <div key={index} className="flex mb-2">
@@ -211,7 +211,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
       </div>
 
       {/* Fabric Images */}
-      <div>
+      <div className={styles.section}>
         <label>Fabric Images</label>
         {formData.fabricImages.map((img, index) => (
           <div key={index} className="flex mb-2">

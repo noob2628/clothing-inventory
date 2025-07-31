@@ -22,16 +22,13 @@ export default function RootLayout({ children }) {
 }
 
 const Header = () => (
-  <header className="bg-white shadow-sm py-4">
-    <div className="container flex justify-between items-center">
-      <div className="flex items-center">
-        <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center mr-3">
-          <span className="text-white font-bold text-xl">F</span>
-        </div>
-        <h1 className="text-2xl font-bold">Fashion Inventory</h1>
+  <header className="app-header">
+    <div className="header-content">
+      <div className="brand">
+        <div className="logo">F</div>
+        <h1 className="title">Fashion Inventory</h1>
       </div>
-      <SearchBar />
-      <nav className="flex space-x-6">
+      <nav className="nav-links">
         <NavLink href="/">Dashboard</NavLink>
         <NavLink href="/create">Add Product</NavLink>
       </nav>
@@ -48,7 +45,7 @@ const NavLink = ({ href, children }) => (
 const Footer = () => (
   <footer className="bg-primary text-white py-8 mt-12">
     <div className="container text-center">
-      <p>© 2023 Fashion Inventory System. All rights reserved.</p>
+      <p>© 2025 Fashion Inventory System. All rights reserved.</p>
     </div>
   </footer>
 );

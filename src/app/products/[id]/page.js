@@ -6,10 +6,9 @@ import { sizeFields, getLabel } from '@/lib/sizeFields';
 import dynamic from 'next/dynamic';
 import styles from './ProductDetail.module.css';
 
-// Dynamically import client-only components
 const ImageGallery = dynamic(
   () => import('react-image-gallery').then(mod => mod.default),
-  { ssr: false, loading: () => <p>Loading gallery...</p> }
+  { ssr: false, loading: () => <div className={styles.galleryLoading}>Loading images...</div> }
 );
 
 export default function ProductDetail() {
@@ -134,13 +133,16 @@ export default function ProductDetail() {
             <div className={styles.galleryContainer}>
               <h2 className={styles.sectionTitle}>Product Images</h2>
               {productImages.length > 0 ? (
-                <ImageGallery
-                  items={productImages}
-                  showPlayButton={false}
-                  showFullscreenButton={true}
-                  showNav={true}
-                  showBullets={true}
-                />
+                <div className={styles.imageGalleryWrapper}>
+                  <ImageGallery
+                    items={productImages}
+                    showPlayButton={false}
+                    showFullscreenButton={true}
+                    showNav={true}
+                    showBullets={true}
+                    additionalClass={styles.customGallery}
+                  />
+                </div>
               ) : (
                 <div className={styles.emptyGallery}>
                   <div className={styles.placeholderIcon}>👕</div>
@@ -152,13 +154,15 @@ export default function ProductDetail() {
             <div className={styles.galleryContainer}>
               <h2 className={styles.sectionTitle}>Fabric Images</h2>
               {fabricImages.length > 0 ? (
-                <ImageGallery
-                  items={fabricImages}
-                  showPlayButton={false}
-                  showFullscreenButton={true}
-                  showNav={true}
-                  showBullets={true}
-                />
+                <div className={styles.imageGalleryWrapper}>
+                  <ImageGallery
+                    items={fabricImages}
+                    showPlayButton={false}
+                    showFullscreenButton={true}
+                    showNav={true}
+                    showBullets={true}
+                  />
+                </div>
               ) : (
                 <div className={styles.emptyGallery}>
                   <div className={styles.placeholderIcon}>🧵</div>

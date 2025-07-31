@@ -1,6 +1,7 @@
 //src/app/page.js
 'use client';
-import { useState, useEffect } from 'react';
+'use client';
+import { useState, useEffect, useRef } from 'react';
 import { styled } from '@mui/material/styles';
 import { Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -10,9 +11,21 @@ import ProductCard from '@/components/ProductCard';
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [isSticky, setIsSticky] = useState(false);
+  const headerRef = useRef(null);
 
   useEffect(() => {
     fetchProducts();
+    
+    // Sticky header effect
+    const handleScroll = () => {
+      if (headerRef.current) {
+        setIsSticky(window.scrollY > headerRef.current.offsetHeight);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const fetchProducts = async () => {
@@ -39,7 +52,11 @@ export default function Home() {
 
   return (
     <div className="container py-8">
-      <div className="flex justify-between items-center mb-8">
+      {/* Sticky header */}
+      <div 
+        ref={headerRef}
+        className={`sticky-header ${isSticky ? 'sticky' : ''}`}
+      >
         <h1 className="text-3xl font-bold">Product Catalog</h1>
         <SearchBar onSearch={handleSearch} />
       </div>
@@ -47,7 +64,7 @@ export default function Home() {
       {filteredProducts.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="product-grid">
           {filteredProducts.map(product => (
             <ProductCard 
               key={product.id} 
