@@ -1,6 +1,7 @@
+// src/app/products/[id]/page.js
 'use client';
 import { useParams, useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { sizeFields, getLabel } from '@/lib/sizeFields';
 import dynamic from 'next/dynamic';
@@ -8,7 +9,7 @@ import styles from './ProductDetail.module.css';
 
 const ImageGallery = dynamic(
   () => import('react-image-gallery').then(mod => mod.default),
-  { ssr: false, loading: () => <div className={styles.galleryLoading}>Loading images...</div> }
+  { ssr: false, loading: () => <div className={styles.emptyGallery}>Loading images...</div> }
 );
 
 export default function ProductDetail() {
@@ -16,6 +17,8 @@ export default function ProductDetail() {
   const router = useRouter();
   const [product, setProduct] = useState(null);
   const [error, setError] = useState(null);
+  const [isSticky, setIsSticky] = useState(false);
+  const headerRef = useRef(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -35,26 +38,30 @@ export default function ProductDetail() {
     if (id) fetchProduct();
   }, [id]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (headerRef.current) {
+        setIsSticky(window.scrollY > headerRef.current.offsetHeight);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-red-500 mb-4">Error: {error}</div>
-        <button 
-          onClick={() => router.push('/')}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Back to Home
-        </button>
+      <div className={styles.container}>
+        <div className="error-message">Error: {error}</div>
+        <button onClick={() => router.push('/')}>Back to Home</button>
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent"></div>
-        </div>
+      <div className={styles.container}>
+        <div className="spinner"></div>
       </div>
     );
   }
@@ -71,23 +78,41 @@ export default function ProductDetail() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.backButton}>
+      <div 
+        ref={headerRef}
+        className={`${styles.stickyHeader} ${isSticky ? styles.sticky : ''}`}
+      >
         <Link href="/" className={styles.backLink}>
-          &larr; Back to Products
+          <span className={styles.backIcon}>&larr;</span>
+          Back to Products
         </Link>
       </div>
 
-      <div className={styles.card}>
-        <div className={styles.cardGrid}>
+      <div className={styles.productCard}>
+        <div className={styles.gridContainer}>
+          {/* Details Section */}
           <div className={styles.detailsSection}>
             <h1 className={styles.productTitle}>{product.name}</h1>
-            <p className={styles.productMeta}>SKU: {product.sku}</p>
-            <p className={styles.productMeta}>Code: {product.code}</p>
-            <p className={styles.productMeta}>Category: {product.category}</p>
             
-            <div className={styles.variations}>
+            <div className={styles.metaGrid}>
+              <div className={styles.metaItem}>
+                <div className={styles.metaLabel}>SKU</div>
+                <div className={styles.metaValue}>{product.sku}</div>
+              </div>
+              <div className={styles.metaItem}>
+                <div className={styles.metaLabel}>Code</div>
+                <div className={styles.metaValue}>{product.code}</div>
+              </div>
+              <div className={styles.metaItem}>
+                <div className={styles.metaLabel}>Category</div>
+                <div className={styles.metaValue}>{product.category}</div>
+              </div>
+            </div>
+            
+            {/* Variations */}
+            <div className={styles.variationsContainer}>
               <h2 className={styles.sectionTitle}>Variations</h2>
-              <div className={styles.variationGrid}>
+              <div className={styles.variationTags}>
                 {product.variations.map((variation, i) => (
                   <span key={i} className={styles.variationTag}>
                     {variation}
@@ -96,9 +121,10 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            <div className={styles.measurements}>
+            {/* Size Measurements */}
+            <div className={styles.measurementsContainer}>
               <h2 className={styles.sectionTitle}>Size Measurements (cm)</h2>
-              <div className={styles.measurementGrid}>
+              <div className={styles.measurementsGrid}>
                 {sizeFields[product.category].map(field => (
                   <div key={field} className={styles.measurementItem}>
                     <div className={styles.measurementLabel}>{getLabel(field)}</div>
@@ -110,9 +136,10 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            <div className={styles.suppliers}>
+            {/* Suppliers */}
+            <div className={styles.suppliersContainer}>
               <h2 className={styles.sectionTitle}>Suppliers</h2>
-              <ul className={styles.supplierList}>
+              <ul className={styles.suppliersList}>
                 {product.suppliers.map((supplier, i) => (
                   <li key={i} className={styles.supplierItem}>
                     {supplier}
@@ -129,18 +156,20 @@ export default function ProductDetail() {
             </Link>
           </div>
 
+          {/* Images Section */}
           <div className={styles.imagesSection}>
+            {/* Product Images */}
             <div className={styles.galleryContainer}>
               <h2 className={styles.sectionTitle}>Product Images</h2>
               {productImages.length > 0 ? (
-                <div className={styles.imageGalleryWrapper}>
+                <div className={styles.galleryWrapper}>
                   <ImageGallery
                     items={productImages}
                     showPlayButton={false}
                     showFullscreenButton={true}
                     showNav={true}
                     showBullets={true}
-                    additionalClass={styles.customGallery}
+                    additionalClass={styles.imageGallery}
                   />
                 </div>
               ) : (
@@ -151,16 +180,18 @@ export default function ProductDetail() {
               )}
             </div>
 
+            {/* Fabric Images */}
             <div className={styles.galleryContainer}>
               <h2 className={styles.sectionTitle}>Fabric Images</h2>
               {fabricImages.length > 0 ? (
-                <div className={styles.imageGalleryWrapper}>
+                <div className={styles.galleryWrapper}>
                   <ImageGallery
                     items={fabricImages}
                     showPlayButton={false}
                     showFullscreenButton={true}
                     showNav={true}
                     showBullets={true}
+                    additionalClass={styles.imageGallery}
                   />
                 </div>
               ) : (

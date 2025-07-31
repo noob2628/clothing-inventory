@@ -1,4 +1,4 @@
-// components/ProductForm.js
+// src/app/components/ProductForm.js
 import { useState } from 'react';
 import { Button, TextField, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
