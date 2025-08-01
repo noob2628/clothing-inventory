@@ -6,14 +6,24 @@
         │       └── [id]/
         │           └── route.js
         ├── components/
+        │   └── AuthGuard.js
+        │   └── AuthProvider.js
+        │   └── DeleteConfirmation.js
+        │   └── DeleteConfirmation.module.css
+        │   └── Header.js
+        │   └── Header.module.css
         │   └── ProductCard.js
         │   └── ProductForm.js
         │   └── ProductForm.module.css
         │   └── SearchBar.js
         ├── lib/
+        │   ├── auth.js
         │   ├── database.js
         │   ├── db.js
         │   └── sizeFields.js
+        ├── login/
+        │   ├── LoginPage.module.css
+        │   ├── page.js
         ├── products/
         │   └── [id]/
         │       ├── page.js
@@ -21,5 +31,6 @@
         │           └── page.js
         ├── create/
         │   └── page.js
-        └── page.js
+        ├── page.js
         ├── layout.js
+        ├── HomePage.module.css

@@ -1,3 +1,5 @@
+/* src/app/components/Header.module.css */
+/* Updated with fixes for small screens */
 .header {
   background: white;
   padding: 1rem 0;
@@ -5,23 +7,6 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  transition: all 0.3s ease;
-  transform-origin: top;
-}
-
-.header.shrink {
-  padding: 0.5rem 0;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
-  animation: shrink 0.3s ease forwards;
-}
-
-@keyframes shrink {
-  0% {
-    transform: scaleY(1);
-  }
-  100% {
-    transform: scaleY(0.9);
-  }
 }
 
 .container {
@@ -31,21 +16,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: all 0.3s ease;
-}
-
-.header.shrink .container {
-  padding: 0.2rem 1rem;
+  position: relative;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  transition: all 0.3s ease;
+  z-index: 1001;
 }
 
-.header.shrink .brand {
-  transform: scale(0.9);
+.logoLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
 }
 
 .logo {
@@ -60,66 +44,72 @@
   font-weight: bold;
   font-size: 1.2rem;
   margin-right: 0.8rem;
-  transition: all 0.3s ease;
-}
-
-.header.shrink .logo {
-  width: 30px;
-  height: 30px;
-  font-size: 1rem;
 }
 
 .title {
   font-size: 1.4rem;
   font-weight: 700;
   color: #2d2d2d;
-  transition: all 0.3s ease;
 }
 
-.header.shrink .title {
-  font-size: 1.2rem;
+.navContainer {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .nav {
   display: flex;
   gap: 1.5rem;
-  margin: 0 2rem;
-  transition: all 0.3s ease;
-}
-
-.header.shrink .nav {
-  margin: 0 1.5rem;
 }
 
 .navLink {
   font-weight: 500;
   color: #555;
   transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
 }
 
 .navLink:hover {
   color: #4a6cf7;
 }
 
+.navIcon {
+  font-size: 1.1rem;
+}
+
 .userSection {
   display: flex;
   align-items: center;
   gap: 1rem;
-  transition: all 0.3s ease;
 }
 
-.header.shrink .userSection {
-  gap: 0.8rem;
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.userIcon {
+  color: #777;
+  font-size: 1.2rem;
 }
 
 .username {
   font-weight: 500;
   color: #555;
-  transition: all 0.3s ease;
 }
 
-.header.shrink .username {
-  font-size: 0.9rem;
+.userRole {
+  background: #f0f0f0;
+  color: #777;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  margin-left: 0.3rem;
 }
 
 .logoutButton {
@@ -129,10 +119,12 @@
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
+  font-size: 0.9rem;
 }
 
 .logoutButton:hover {
   background: #f8f8f8;
+  border-color: #ccc;
 }
 
 .loginButton {
@@ -141,7 +133,8 @@
   padding: 0.5rem 1rem;
   border-radius: 4px;
   font-weight: 500;
-  transition: background 0.2s, transform 0.3s;
+  transition: background 0.2s;
+  text-decoration: none;
 }
 
 .loginButton:hover {
@@ -156,109 +149,73 @@
   font-size: 1.5rem;
   cursor: pointer;
   color: #555;
+  z-index: 1001;
 }
 
 /* Responsive styles */
-@media (max-width: 1024px) {
-  .nav {
-    gap: 1rem;
-    margin: 0 1rem;
-  }
-  
-  .header.shrink .nav {
-    margin: 0 0.8rem;
-  }
-}
-
 @media (max-width: 768px) {
-  .container {
-    flex-direction: row;
-    gap: 1rem;
-    padding: 0.5rem 1rem;
-  }
-  
-  .header.shrink .container {
-    padding: 0.2rem 1rem;
-  }
-  
-  .title {
-    font-size: 1.2rem;
-  }
-  
-  .nav {
+  .navContainer {
     position: fixed;
-    top: 70px;
+    top: 0;
     left: 0;
     right: 0;
+    bottom: 0;
     background: white;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    padding: 1rem 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 999;
     transform: translateY(-100%);
     opacity: 0;
     transition: transform 0.3s ease, opacity 0.3s ease;
-    z-index: 999;
-    gap: 0;
+    padding-top: 80px;
   }
   
-  .nav.active {
+  .navContainer.active {
     transform: translateY(0);
     opacity: 1;
+  }
+  
+  .nav {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
   }
   
   .navLink {
     width: 100%;
     text-align: center;
-    padding: 0.8rem 0;
+    padding: 1rem 0;
     border-bottom: 1px solid #f0f0f0;
+    font-size: 1.1rem;
+  }
+  
+  .userSection {
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    padding: 1rem;
+    border-top: 1px solid #f0f0f0;
   }
   
   .menuToggle {
     display: block;
-  }
-  
-  .userSection {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: white;
-    padding: 1rem;
-    justify-content: center;
-    border-top: 1px solid #f0f0f0;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-  }
-  
-  .userSection.active {
-    transform: translateY(0);
-  }
-  
-  .header.shrink .title {
-    font-size: 1.1rem;
-  }
-  
-  .header.shrink .logo {
-    width: 28px;
-    height: 28px;
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
   }
 }
 
 @media (max-width: 480px) {
-  .brand {
-    flex-grow: 1;
-  }
-  
   .title {
     font-size: 1.1rem;
   }
   
-  .header.shrink .title {
-    font-size: 1rem;
-  }
-  
   .logo {
     margin-right: 0.5rem;
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
   }
 }

@@ -17,10 +17,15 @@
 }
 
 body {
+  padding-top: 80px;
   font-family: 'Montserrat', sans-serif;
   color: var(--text);
   background-color: #fafafa;
   line-height: 1.6;
+}
+
+html {
+  scroll-padding-top: 80px; /* Height of your sticky header */
 }
 
 h1, h2, h3, h4 {
@@ -161,5 +166,12 @@ a {
   .nav-links {
     width: 100%;
     justify-content: center;
+  }
+  html {
+    scroll-padding-top: 70px;
+  }
+  
+  body {
+    padding-top: 70px;
   }
 }

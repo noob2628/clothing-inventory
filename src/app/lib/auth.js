@@ -1,5 +1,5 @@
 //src/app/lib/auth.js
-// Simple in-memory authentication (client-side only)
+// Simple in-memory authentication (client-side only)|}
 export const users = [
   {
     username: "user",
@@ -21,10 +21,8 @@ export const authenticate = (username, password) => {
 
 // Client-side only functions
 export const getUserRole = () => {
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem('userRole') || 'USER';
-  }
-  return 'USER'; // Default for SSR
+  if (typeof window === 'undefined') return null; // Return null during SSR
+  return localStorage.getItem('userRole') || 'USER';
 };
 
 export const setUserSession = (user) => {

@@ -1,22 +1,26 @@
 // src/app/components/Header.js
 'use client';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { FaBars, FaTimes, FaUserCircle, FaCog } from 'react-icons/fa';
 import { logout, getUserRole } from '@/lib/auth';
 import styles from './Header.module.css';
-import { useState, useEffect } from 'react';
-import { FaBars, FaTimes } from 'react-icons/fa';
 
 export default function Header() {
-  const [role, setRole] = useState('USER');
+  const [role, setRole] = useState(null); // Initialize as null
   const [username, setUsername] = useState('');
-  const [isClient, setIsClient] = useState(false);
   const [isShrunk, setIsShrunk] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    setIsClient(true);
-    setRole(getUserRole());
-    setUsername(localStorage.getItem('username') || '');
+    // Client-side only operations
+    const storedRole = getUserRole();
+    const storedUsername = localStorage.getItem('username') || '';
+    
+    setRole(storedRole);
+    setUsername(storedUsername);
     
     const handleScroll = () => {
       setIsShrunk(window.scrollY > 50);
@@ -29,7 +33,7 @@ export default function Header() {
   const handleLogout = () => {
     logout();
     setIsMenuOpen(false);
-    window.location.href = '/login';
+    router.push('/login');
   };
 
   const toggleMenu = () => {
@@ -38,45 +42,55 @@ export default function Header() {
 
   const headerClass = `${styles.header} ${isShrunk ? styles.shrink : ''}`;
 
+  // Only render UI elements that depend on client-side state after hydration
   return (
     <header className={headerClass}>
       <div className={styles.container}>
         <div className={styles.brand}>
-          <div className={styles.logo}>👕</div>
-          <h1 className={styles.title}>Kily Clothing Inventory</h1>
+          <Link href="/" className={styles.logoLink}>
+            <div className={styles.logo}>👕</div>
+            <h1 className={styles.title}>Kily Clothing Inventory</h1>
+          </Link>
         </div>
         
         <button className={styles.menuToggle} onClick={toggleMenu}>
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
         
-        <nav className={`${styles.nav} ${isMenuOpen ? styles.active : ''}`}>
-          {isClient && role && (
+        {/* Navigation and User Section Container */}
+        <div className={`${styles.navContainer} ${isMenuOpen ? styles.active : ''}`}>
+          {role !== null && ( // Only render when role is available
             <>
-              <Link href="/" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>
-                Dashboard
-              </Link>
-              {role === 'ADMIN' && (
-                <Link href="/create" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>
-                  Add Product
+              <nav className={styles.nav}>
+                <Link href="/" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>
+                  Dashboard
+                </Link>
+                {role === 'ADMIN' && (
+                  <Link href="/create" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>
+                    Add Product
+                  </Link>
+                )}
+              </nav>
+              
+              {role ? (
+                <div className={styles.userSection}>
+                  <div className={styles.userInfo}>
+                    <FaUserCircle className={styles.userIcon} />
+                    <span className={styles.username}>{username}</span>
+                    <span className={styles.userRole}>({role})</span>
+                  </div>
+                  <button onClick={handleLogout} className={styles.logoutButton}>
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <Link href="/login" className={styles.loginButton} onClick={() => setIsMenuOpen(false)}>
+                  Login
                 </Link>
               )}
             </>
           )}
-        </nav>
-        
-        {isClient && role ? (
-          <div className={`${styles.userSection} ${isMenuOpen ? styles.active : ''}`}>
-            <span className={styles.username}>{username}</span>
-            <button onClick={handleLogout} className={styles.logoutButton}>
-              Logout
-            </button>
-          </div>
-        ) : (
-          <Link href="/login" className={styles.loginButton}>
-            Login
-          </Link>
-        )}
+        </div>
       </div>
     </header>
   );
