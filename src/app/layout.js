@@ -1,42 +1,14 @@
 // src/app/layout.js
 import './globals.css';
 import Head from 'next/head';
-import SearchBar from './components/SearchBar';
+import Header from '@/components/Header';
+import AuthProvider from '@/components/AuthProvider';
 
 export const metadata = {
   title: 'Kily Clothing Inventory',
   description: 'Premium clothing management system',
 };
 
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <Head>
-        <link rel="icon" href="/kily.ph.webp" />
-        {/* Head content moved to _document.js for custom fonts */}
-      </Head>
-      <body className="min-h-screen bg-gray-50">
-        {children}
-      </body>
-    </html>
-  );
-}
-
-const Header = () => (
-  <header className="app-header">
-    <div className="header-content">
-      <div className="brand">
-        <div className="logo">F</div>
-        <h1 className="title">Kily Clothing Inventory</h1>
-      </div>
-      <nav className="nav-links">
-        <NavLink href="/">Dashboard</NavLink>
-        <NavLink href="/create">Add Product</NavLink>
-      </nav>
-    </div>
-  </header>
-);
 
 const NavLink = ({ href, children }) => (
   <a href={href} className="font-medium hover:text-accent transition-colors">
@@ -51,3 +23,23 @@ const Footer = () => (
     </div>
   </footer>
 );
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <Head>
+        <link rel="icon" href="/kily.ph.webp" />
+      </Head>
+      <body className="min-h-screen bg-gray-50 flex flex-col">
+        <AuthProvider>
+          <Header />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
+        </AuthProvider>
+      </body>
+    </html>
+  );
+}

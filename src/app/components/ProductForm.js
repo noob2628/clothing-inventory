@@ -1,5 +1,5 @@
 // src/app/components/ProductForm.js
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import { 
   Button, 
   TextField, 
@@ -15,8 +15,16 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { getLabel } from '@/lib/sizeFields';
 import styles from './ProductForm.module.css';
+import { getUserRole } from '@/lib/auth';
 
 const ProductForm = ({ initialData = {}, onSubmit }) => {
+  
+  const role = getUserRole();
+  const [username, setUsername] = useState('');
+  useEffect(() => {
+    setUsername(localStorage.getItem('username') || 'admin');
+  }, []);
+
   const defaultProduct = {
     sku: '',
     name: '',
@@ -90,7 +98,14 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    
+    const updatedData = {
+      ...formData,
+      lastUpdatedBy: username,
+      location: formData.location || 'Warehouse A'
+    };
+    
+    onSubmit(updatedData);
   };
 
   return (
@@ -301,6 +316,42 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
         >
           Add Supplier
         </Button>
+      </div>
+
+      {/* Location and Last Updated Info */}
+      <div className={styles.section}>
+        <Typography variant="h6" className={styles.sectionTitle}>
+          Additional Information
+        </Typography>
+        <div className={styles.grid}>
+          <TextField
+            label="Location"
+            name="location"
+            value={formData.location || ''}
+            onChange={handleChange}
+            fullWidth
+          />
+          
+          {initialData.id && (
+            <div className={styles.infoGroup}>
+              <div className={styles.infoLabel}>Last Updated By:</div>
+              <div className={styles.infoValue}>
+                {initialData.lastUpdatedBy || 'N/A'}
+              </div>
+            </div>
+          )}
+          
+          {initialData.id && (
+            <div className={styles.infoGroup}>
+              <div className={styles.infoLabel}>Last Updated At:</div>
+              <div className={styles.infoValue}>
+                {initialData.lastUpdatedAt 
+                  ? new Date(initialData.lastUpdatedAt).toLocaleString() 
+                  : 'N/A'}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <Button 

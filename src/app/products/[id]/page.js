@@ -201,6 +201,26 @@ export default function ProductDetail() {
                 </div>
               )}
             </div>
+            
+            {/* Additional Info Section */}
+            <div className={styles.additionalInfo}>
+              <div className={styles.infoItem}>
+                <div className={styles.infoLabel}>Location</div>
+                <div className={styles.infoValue}>{product.location || 'N/A'}</div>
+              </div>
+              <div className={styles.infoItem}>
+                <div className={styles.infoLabel}>Last Updated By</div>
+                <div className={styles.infoValue}>{product.lastUpdatedBy || 'N/A'}</div>
+              </div>
+              <div className={styles.infoItem}>
+                <div className={styles.infoLabel}>Last Updated At</div>
+                <div className={styles.infoValue}>
+                  {product.lastUpdatedAt 
+                    ? new Date(product.lastUpdatedAt).toLocaleString() 
+                    : 'N/A'}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

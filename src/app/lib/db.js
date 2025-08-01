@@ -12,7 +12,10 @@ const mapRowToProduct = (row) => ({
   fabricImages: row.fabric_images,
   category: row.category,
   suppliers: row.suppliers,
-  sizes: row.sizes
+  sizes: row.sizes,
+  lastUpdatedBy: row.last_updated_by,
+  lastUpdatedAt: row.last_updated_at,
+  location: row.location
 });
 
 export const readData = async () => {
@@ -34,8 +37,9 @@ export const createProduct = async (product) => {
   const { rows } = await query(
     `INSERT INTO products (
       id, sku, name, code, variations, product_images, 
-      fabric_images, category, suppliers, sizes
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
+      fabric_images, category, suppliers, sizes,
+      last_updated_by, last_updated_at, location
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`,
     [
       product.id,
       product.sku,
@@ -46,7 +50,10 @@ export const createProduct = async (product) => {
       product.fabricImages,
       product.category,
       product.suppliers,
-      product.sizes
+      product.sizes,
+      product.lastUpdatedBy || 'admin',
+      new Date().toISOString(),
+      product.location || 'Warehouse A'
     ]
   );
   return mapRowToProduct(rows[0]);
@@ -56,7 +63,12 @@ export const updateProduct = async (id, updates) => {
   const product = await getProductById(id);
   if (!product) return null;
 
-  const updatedProduct = { ...product, ...updates };
+  const updatedProduct = { 
+    ...product, 
+    ...updates,
+    lastUpdatedBy: updates.lastUpdatedBy || 'admin',
+    lastUpdatedAt: new Date().toISOString()
+  };
   
   await query(
     `UPDATE products SET
@@ -68,8 +80,11 @@ export const updateProduct = async (id, updates) => {
       fabric_images = $6,
       category = $7,
       suppliers = $8,
-      sizes = $9
-    WHERE id = $10`,
+      sizes = $9,
+      last_updated_by = $10,
+      last_updated_at = $11,
+      location = $12
+    WHERE id = $13`,
     [
       updatedProduct.sku,
       updatedProduct.name,
@@ -80,6 +95,9 @@ export const updateProduct = async (id, updates) => {
       updatedProduct.category,
       updatedProduct.suppliers,
       updatedProduct.sizes,
+      updatedProduct.lastUpdatedBy,
+      updatedProduct.lastUpdatedAt,
+      updatedProduct.location,
       id
     ]
   );

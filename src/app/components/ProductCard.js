@@ -5,18 +5,27 @@ import { IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { getUserRole } from '@/lib/auth';
+import DeleteConfirmation from './DeleteConfirmation';
+import { useState,useEffect } from 'react';
 
 export default function ProductCard({ product, onDelete }) {
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [role, setRole] = useState('USER');
+
+  useEffect(() => {
+    setRole(getUserRole());
+  }, []);
+
+
   const images = product.productImages.map(img => ({
     original: img,
     thumbnail: img
   }));
 
   const handleDelete = async () => {
-    if (confirm('Are you sure you want to delete this product?')) {
-      await fetch(`/api/products/${product.id}`, { method: 'DELETE' });
-      onDelete();
-    }
+    await fetch(`/api/products/${product.id}`, { method: 'DELETE' });
+    onDelete();
   };
 
   return (
@@ -33,27 +42,40 @@ export default function ProductCard({ product, onDelete }) {
         <p className="text-sm text-gray-600 mb-3">SKU: {product.sku}</p>
         
         <div className="flex justify-between mt-4">
-          <IconButton 
+            <IconButton 
             href={`/products/${product.id}`} 
             className="text-gray-600"
-          >
+            >
             <VisibilityIcon />
-          </IconButton>
-          
-          <IconButton 
-            href={`/products/${product.id}/edit`} 
-            className="text-blue-500"
-          >
-            <EditIcon />
-          </IconButton>
-          
-          <IconButton 
-            onClick={handleDelete} 
-            className="text-red-500"
-          >
-            <DeleteIcon />
-          </IconButton>
+            </IconButton>
+            
+            {role === 'ADMIN' && (
+            <>
+                <IconButton 
+                href={`/products/${product.id}/edit`} 
+                className="text-blue-500"
+                >
+                <EditIcon />
+                </IconButton>
+                
+                <IconButton 
+                onClick={() => setDeleteOpen(true)} 
+                className="text-red-500"
+                >
+                <DeleteIcon />
+                </IconButton>
+            </>
+            )}
         </div>
+        
+        {/* Delete Confirmation Modal */}
+        <DeleteConfirmation
+            open={deleteOpen}
+            onClose={() => setDeleteOpen(false)}
+            onConfirm={handleDelete}
+            title={`Delete ${product.name}`}
+            message={`Are you sure you want to delete "${product.name}"? This action cannot be undone.`}
+        />
       </div>
       
       <div className="h-48 overflow-hidden">

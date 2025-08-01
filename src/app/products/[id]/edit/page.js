@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import ProductForm from '@/components/ProductForm';
 import Link from 'next/link';
 import styles from '../ProductDetail.module.css';
+import AuthGuard from '@/components/AuthGuard';
 
 export default function EditProduct() {
   const { id } = useParams();
@@ -85,21 +86,23 @@ export default function EditProduct() {
   }
 
   return (
-    <div className={styles.container}>
-      <div 
-        ref={headerRef}
-        className={`${styles.stickyHeader} ${isSticky ? styles.sticky : ''}`}
-      >
-        <Link href="/" className={styles.backLink}>
-          <span className={styles.backIcon}>&larr;</span>
-          Back to Products
-        </Link>
-      </div>
+    <AuthGuard roles={['ADMIN']}>
+      <div className={styles.container}>
+        <div 
+          ref={headerRef}
+          className={`${styles.stickyHeader} ${isSticky ? styles.sticky : ''}`}
+        >
+          <Link href="/" className={styles.backLink}>
+            <span className={styles.backIcon}>&larr;</span>
+            Back to Products
+          </Link>
+        </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6">Edit Product</h1>
-        <ProductForm initialData={product} onSubmit={handleSubmit} />
+        <div className="container mx-auto px-4 py-8">
+          <h1 className="text-2xl font-bold mb-6">Edit Product</h1>
+          <ProductForm initialData={product} onSubmit={handleSubmit} />
+        </div>
       </div>
-    </div>
+    </AuthGuard>
   );
 }

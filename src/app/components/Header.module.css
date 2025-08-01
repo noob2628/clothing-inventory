@@ -1,0 +1,264 @@
+.header {
+  background: white;
+  padding: 1rem 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  transform-origin: top;
+}
+
+.header.shrink {
+  padding: 0.5rem 0;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+  animation: shrink 0.3s ease forwards;
+}
+
+@keyframes shrink {
+  0% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0.9);
+  }
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.header.shrink .container {
+  padding: 0.2rem 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.header.shrink .brand {
+  transform: scale(0.9);
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #4a6cf7;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-right: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+.header.shrink .logo {
+  width: 30px;
+  height: 30px;
+  font-size: 1rem;
+}
+
+.title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2d2d2d;
+  transition: all 0.3s ease;
+}
+
+.header.shrink .title {
+  font-size: 1.2rem;
+}
+
+.nav {
+  display: flex;
+  gap: 1.5rem;
+  margin: 0 2rem;
+  transition: all 0.3s ease;
+}
+
+.header.shrink .nav {
+  margin: 0 1.5rem;
+}
+
+.navLink {
+  font-weight: 500;
+  color: #555;
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: #4a6cf7;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.header.shrink .userSection {
+  gap: 0.8rem;
+}
+
+.username {
+  font-weight: 500;
+  color: #555;
+  transition: all 0.3s ease;
+}
+
+.header.shrink .username {
+  font-size: 0.9rem;
+}
+
+.logoutButton {
+  background: transparent;
+  border: 1px solid #ddd;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logoutButton:hover {
+  background: #f8f8f8;
+}
+
+.loginButton {
+  background: #4a6cf7;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background 0.2s, transform 0.3s;
+}
+
+.loginButton:hover {
+  background: #3a5ae0;
+}
+
+/* Mobile menu toggle */
+.menuToggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #555;
+}
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+  .nav {
+    gap: 1rem;
+    margin: 0 1rem;
+  }
+  
+  .header.shrink .nav {
+    margin: 0 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: row;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  .header.shrink .container {
+    padding: 0.2rem 1rem;
+  }
+  
+  .title {
+    font-size: 1.2rem;
+  }
+  
+  .nav {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    z-index: 999;
+    gap: 0;
+  }
+  
+  .nav.active {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  .navLink {
+    width: 100%;
+    text-align: center;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .menuToggle {
+    display: block;
+  }
+  
+  .userSection {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 1rem;
+    justify-content: center;
+    border-top: 1px solid #f0f0f0;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .userSection.active {
+    transform: translateY(0);
+  }
+  
+  .header.shrink .title {
+    font-size: 1.1rem;
+  }
+  
+  .header.shrink .logo {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand {
+    flex-grow: 1;
+  }
+  
+  .title {
+    font-size: 1.1rem;
+  }
+  
+  .header.shrink .title {
+    font-size: 1rem;
+  }
+  
+  .logo {
+    margin-right: 0.5rem;
+  }
+}
