@@ -51,7 +51,11 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
       fRise: 0,
       leghole: 0,
       hips: 0
-    }
+    },
+    sizeRange: '',
+    packagingDescription: '',
+    thingsToRemember: '',
+    fabricType: ''
   };
 
   const [formData, setFormData] = useState(initialData.id ? initialData : defaultProduct);
@@ -351,6 +355,53 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
               </div>
             </div>
           )}
+        </div>
+      </div>
+      
+      {/* Size Range, Packaging Description, and Things to Remember */}
+      <div className={styles.section}>
+        <Typography variant="h6" className={styles.sectionTitle}>
+          Product Details
+        </Typography>
+        <div className={styles.grid}>
+          <TextField
+            label="Size Range"
+            name="sizeRange"
+            value={formData.sizeRange || ''}
+            onChange={handleChange}
+            fullWidth
+            placeholder="e.g., S, M, L, XL"
+          />
+          
+          <TextField
+            label="Packaging Description"
+            name="packagingDescription"
+            value={formData.packagingDescription || ''}
+            onChange={handleChange}
+            fullWidth
+            multiline
+            rows={2}
+            placeholder="Short packaging details"
+          />
+          
+          <TextField
+            label="Things to Remember"
+            name="thingsToRemember"
+            value={formData.thingsToRemember || ''}
+            onChange={handleChange}
+            fullWidth
+            multiline
+            rows={4}
+            placeholder="Important notes and care instructions"
+          />
+          <TextField
+            label="Fabric Type"
+            name="fabricType"
+            value={formData.fabricType || ''}
+            onChange={handleChange}
+            fullWidth
+            placeholder="e.g., Cotton, Polyester"
+          />
         </div>
       </div>
 

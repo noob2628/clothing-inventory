@@ -148,6 +148,38 @@ export default function ProductDetail() {
               </ul>
             </div>
 
+            {/* Additional Info */}
+            <div className={styles.detailsContainer}>
+              <h2 className={styles.sectionTitle}>Product Details</h2>
+              
+              {product.sizeRange && (
+                <div className={styles.detailItem}>
+                  <div className={styles.detailLabel}>Size Range:</div>
+                  <div className={styles.detailValue}>{product.sizeRange}</div>
+                </div>
+              )}
+              
+              {product.packagingDescription && (
+                <div className={styles.detailItem}>
+                  <div className={styles.detailLabel}>Packaging:</div>
+                  <div className={styles.detailValue}>{product.packagingDescription}</div>
+                </div>
+              )}
+              
+              {product.thingsToRemember && (
+                <div className={styles.detailItem}>
+                  <div className={styles.detailLabel}>Notes:</div>
+                  <div className={styles.detailValue}>{product.thingsToRemember}</div>
+                </div>
+              )}
+              {product.fabricType && (
+                <div className={styles.detailItem}>
+                  <div className={styles.detailLabel}>Fabric Type:</div>
+                  <div className={styles.detailValue}>{product.fabricType}</div>
+                </div>
+              )}
+            </div>
+
             <Link 
               href={`/products/${product.id}/edit`} 
               className={styles.editButton}

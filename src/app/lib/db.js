@@ -15,7 +15,11 @@ const mapRowToProduct = (row) => ({
   sizes: row.sizes,
   lastUpdatedBy: row.last_updated_by,
   lastUpdatedAt: row.last_updated_at,
-  location: row.location
+  location: row.location,
+  sizeRange: row.size_range,
+  packagingDescription: row.packaging_description,
+  thingsToRemember: row.things_to_remember,
+  fabricType: row.fabric_type,
 });
 
 export const readData = async () => {
@@ -38,8 +42,8 @@ export const createProduct = async (product) => {
     `INSERT INTO products (
       id, sku, name, code, variations, product_images, 
       fabric_images, category, suppliers, sizes,
-      last_updated_by, last_updated_at, location
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`,
+      last_updated_by, last_updated_at, location, size_range, packaging_description, things_to_remember
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *`,
     [
       product.id,
       product.sku,
@@ -53,7 +57,11 @@ export const createProduct = async (product) => {
       product.sizes,
       product.lastUpdatedBy || 'admin',
       new Date().toISOString(),
-      product.location || 'Warehouse A'
+      product.location || 'Warehouse A',
+      product.sizeRange || '',
+      product.packagingDescription || '',
+      product.thingsToRemember || '',
+      product.fabricType || ''
     ]
   );
   return mapRowToProduct(rows[0]);
@@ -83,8 +91,12 @@ export const updateProduct = async (id, updates) => {
       sizes = $9,
       last_updated_by = $10,
       last_updated_at = $11,
-      location = $12
-    WHERE id = $13`,
+      location = $12,
+      size_range = $13,
+      packaging_description = $14,
+      things_to_remember = $15,
+      fabric_type = $16
+    WHERE id = $17`,
     [
       updatedProduct.sku,
       updatedProduct.name,
@@ -98,6 +110,10 @@ export const updateProduct = async (id, updates) => {
       updatedProduct.lastUpdatedBy,
       updatedProduct.lastUpdatedAt,
       updatedProduct.location,
+      updatedProduct.sizeRange,
+      updatedProduct.packagingDescription,
+      updatedProduct.thingsToRemember,
+      updatedProduct.fabricType,
       id
     ]
   );
