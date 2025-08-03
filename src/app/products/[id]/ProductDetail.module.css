@@ -301,14 +301,14 @@
   }
 
   /* Force gallery to fill the wrapper (not the viewport) */
-  :global(.image-gallery) {
+  .galleryWrapper :global(.image-gallery) {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 auto !important;
   }
 
   /* Constrain slide height and center-crop within wrapper */
-  :global(.image-gallery-slide) {
+  .galleryWrapper :global(.image-gallery-slide) {
     height: 50vh;                /* or whatever you prefer */
     display: flex;
     align-items: center;
@@ -317,30 +317,30 @@
     background: #000;
   }
 
-  :global(.image-gallery-slide img) {
+  .galleryWrapper :global(.image-gallery-slide img) {
     object-fit: cover;
     width: 100%;
     height: 100%;
     transition: transform 0.3s ease;
   }
 
-  :global(.image-gallery-slide img:hover),
-  :global(.image-gallery-slide:active img) {
+  .galleryWrapper :global(.image-gallery-slide img:hover),
+  .galleryWrapper :global(.image-gallery-slide:active img) {
     transform: scale(1.05);
   }
 
   /* Thumbnail row tweaks */
-  :global(.image-gallery-thumbnails) {
+  .galleryWrapper :global(.image-gallery-thumbnails) {
     padding: 8px;
     overflow-x: auto;
   }
 
-  :global(.image-gallery-thumbnail img) {
+  .galleryWrapper :global(.image-gallery-thumbnail img) {
     border-radius: 4px;
     transition: opacity 0.2s ease;
   }
 
-  :global(.image-gallery-thumbnail.active img) {
+  .galleryWrapper :global(.image-gallery-thumbnail.active img) {
     opacity: 0.7;
   }
 }
