@@ -5,6 +5,12 @@
   padding: 0 20px;
 }
 
+/* override react-image-gallery so vertical scrolls pass through */
+:global(.image-gallery-slide),
+:global(.image-gallery-image) {
+  touch-action: pan-y;
+}
+
 .stickyHeader {
   display: flex;
   flex-direction: column;

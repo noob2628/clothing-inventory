@@ -119,6 +119,8 @@ export default function ProductCard({ product, onDelete }) {
             autoPlay={!isMobile}
             slideInterval={5000}
             showBullets={isMobile}
+            disableSwipe={true}                   // <— turn off swipe handling
+            preventDefaultTouchmoveEvent={false}  // <— let touchmove through
           />
         ) : (
           <div className="bg-gray-100 w-full h-full flex items-center justify-center">

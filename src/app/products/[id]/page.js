@@ -248,6 +248,8 @@ export default function ProductDetail() {
                     showNav={true}
                     showBullets={true}
                     additionalClass={styles.imageGallery}
+                    disableSwipe={true}                   // <— turn off swipe handling
+                    preventDefaultTouchmoveEvent={false}  // <— let touchmove through
                   />
                 </div>
               ) : (
