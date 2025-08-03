@@ -1,24 +1,22 @@
 // src/app/products/[id]/edit/page.js
 'use client';
 import { useParams, useRouter } from 'next/navigation';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { CircularProgress } from '@mui/material';
 import ProductForm from '@/components/ProductForm';
 import AuthGuard from '@/components/AuthGuard';
-import styles from '../ProductDetail.module.css';
 
 export default function EditProduct() {
   const { id } = useParams();
   const router = useRouter();
   const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const headerRef = useRef(null);
+  const [loading, setLoading] = useState(true); // Focus on loading state
 
   useEffect(() => {
     const fetchProduct = async () => {
-      setLoading(true);
       try {
+        setLoading(true); // Ensure loading state is set
         const res = await fetch(`/api/products/${id}`);
         if (!res.ok) {
           throw new Error(`Failed to fetch product: ${res.status}`);
@@ -29,27 +27,16 @@ export default function EditProduct() {
         console.error(err);
         setError(err.message);
       } finally {
-        setLoading(false);
+        setLoading(false); // Always clear loading state
       }
     };
     
     if (id) fetchProduct();
   }, [id]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (headerRef.current) {
-        // you can use this to stick anything up top if needed
-      }
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   const handleSubmit = async (formData) => {
-    setLoading(true);
     try {
+      setLoading(true); // Show loading during submission
       const res = await fetch(`/api/products/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -64,12 +51,11 @@ export default function EditProduct() {
     } catch (err) {
       console.error(err);
       setError(err.message);
-    } finally {
       setLoading(false);
     }
   };
 
-  // Loading state
+  // Only show loading spinner when loading
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -78,7 +64,7 @@ export default function EditProduct() {
     );
   }
 
-  // Error state
+  // Show error if exists
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -93,14 +79,11 @@ export default function EditProduct() {
     );
   }
 
-  // Once loaded
   return (
     <AuthGuard roles={['ADMIN']}>
-      <div className={styles.container}>
-        <div className="container mx-auto px-4 py-8">
-          <h1 className="text-2xl font-bold mb-6">Edit Product</h1>
-          <ProductForm initialData={product} onSubmit={handleSubmit} />
-        </div>
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold mb-6">Edit Product</h1>
+        <ProductForm initialData={product} onSubmit={handleSubmit} />
       </div>
     </AuthGuard>
   );
