@@ -114,12 +114,12 @@ export default function ProductCard({ product, onDelete }) {
             items={images}
             showPlayButton={true}
             showFullscreenButton={true}
-            showNav={false}
+            showNav={!isMobile}
             showThumbnails={true}
             autoPlay={!isMobile}
             slideInterval={5000}
             showBullets={isMobile}
-            disableSwipe={true}                   // <— turn off swipe handling
+            disableSwipe={false}                   // <— turn off swipe handling
             preventDefaultTouchmoveEvent={false}  // <— let touchmove through
           />
         ) : (

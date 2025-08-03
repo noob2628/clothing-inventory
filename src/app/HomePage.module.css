@@ -126,6 +126,15 @@
   .productGrid {
     grid-template-columns: 1fr;
   }
+  .galleryWrapper {
+    margin: 0 -10px;                     /* undo the container’s 10px padding */
+    width: calc(100% + 20px);            /* recapture that space */
+  }
+  .imageGallery {
+    width: 100vw;                        /* force the gallery to fill the viewport */
+    max-width: none;                     /* override any CSS-module scoping */
+    margin-left: calc(-50vw + 50%);      /* center it */
+  }
 }
 
 .loadingOverlay {
@@ -136,4 +145,16 @@
   align-items: center;
   justify-content: center;
   z-index: 100;
+}
+
+@media (max-width: 576px) {
+  .galleryWrapper {
+    margin: 0 -10px;                     /* undo the container’s 10px padding */
+    width: calc(100% + 20px);            /* recapture that space */
+  }
+  .imageGallery {
+    width: 100vw;                        /* force the gallery to fill the viewport */
+    max-width: none;                     /* override any CSS-module scoping */
+    margin-left: calc(-50vw + 50%);      /* center it */
+  }
 }

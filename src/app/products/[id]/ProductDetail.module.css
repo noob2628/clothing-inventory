@@ -288,3 +288,129 @@
   justify-content: center;
   z-index: 100;
 }
+
+/* ——— IMAGE ENHANCEMENTS ——— */
+@media (max-width: 576px) {
+  /* Make the gallery wrapper follow its parent’s padding/width */
+  .galleryWrapper {
+    margin: 0;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  /* Force gallery to fill the wrapper (not the viewport) */
+  :global(.image-gallery) {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  /* Constrain slide height and center-crop within wrapper */
+  :global(.image-gallery-slide) {
+    height: 50vh;                /* or whatever you prefer */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #000;
+  }
+
+  :global(.image-gallery-slide img) {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease;
+  }
+
+  :global(.image-gallery-slide img:hover),
+  :global(.image-gallery-slide:active img) {
+    transform: scale(1.05);
+  }
+
+  /* Thumbnail row tweaks */
+  :global(.image-gallery-thumbnails) {
+    padding: 8px;
+    overflow-x: auto;
+  }
+
+  :global(.image-gallery-thumbnail img) {
+    border-radius: 4px;
+    transition: opacity 0.2s ease;
+  }
+
+  :global(.image-gallery-thumbnail.active img) {
+    opacity: 0.7;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .gridContainer {
+    display: block;              /* single column */
+    padding: 20px 10px;          /* tighter gutters */
+  }
+  .detailsSection,
+  .imagesSection {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+  .imagesSection {
+    order: 2;                    /* images below details */
+  }
+
+  /* ——— IMAGE ENHANCEMENTS ——— */
+
+  /* Make gallery wrapper full-width and add gentle rounding + shadow */
+  .galleryWrapper {
+    margin: 0 -10px;
+    width: calc(100% + 20px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  /* Ensure gallery itself fills viewport */
+  .imageGallery {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    max-width: none;
+  }
+
+  /* Give each slide a consistent max-height and center-crop */
+  .image-gallery-slide {
+    height: 50vh;                /* half the viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #000;            /* black letterbox for non-full images */
+  }
+
+  .image-gallery-slide img {
+    object-fit: cover;           /* crop to fill */
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease;
+  }
+
+  /* Subtle zoom on tap or hover for feedback */
+  .image-gallery-slide:active img,
+  .image-gallery-slide img:hover {
+    transform: scale(1.05);
+  }
+
+  /* Thumbnails row tweaks */
+  .imageGallery .image-gallery-thumbnails {
+    padding: 8px 10px;
+    overflow-x: auto;
+  }
+  .imageGallery .image-gallery-thumbnail img {
+    border-radius: 4px;
+    transition: opacity 0.2s ease;
+  }
+  .imageGallery .image-gallery-thumbnail.active img {
+    opacity: 0.7;
+  }
+}

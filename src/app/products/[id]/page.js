@@ -226,6 +226,8 @@ export default function ProductDetail() {
                     showNav={true}
                     showBullets={true}
                     additionalClass={styles.imageGallery}
+                    disableSwipe={false}                   // <— turn off swipe handling
+                    preventDefaultTouchmoveEvent={false}  // <— let touchmove through
                   />
                 </div>
               ) : (
@@ -248,7 +250,7 @@ export default function ProductDetail() {
                     showNav={true}
                     showBullets={true}
                     additionalClass={styles.imageGallery}
-                    disableSwipe={true}                   // <— turn off swipe handling
+                    disableSwipe={false}                   // <— turn off swipe handling
                     preventDefaultTouchmoveEvent={false}  // <— let touchmove through
                   />
                 </div>
