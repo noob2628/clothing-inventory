@@ -1,5 +1,6 @@
 // src/app/products/[id]/page.js
 'use client';
+import 'react-image-gallery/styles/css/image-gallery.css';
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
@@ -214,7 +215,7 @@ export default function ProductDetail() {
                 <div className={styles.galleryWrapper}>
                   <ImageGallery
                     items={productImages}
-                    showPlayButton={false}
+                    showPlayButton={true}
                     showFullscreenButton={true}
                     showNav={true}
                     showBullets={true}
@@ -236,7 +237,7 @@ export default function ProductDetail() {
                 <div className={styles.galleryWrapper}>
                   <ImageGallery
                     items={fabricImages}
-                    showPlayButton={false}
+                    showPlayButton={true}
                     showFullscreenButton={true}
                     showNav={true}
                     showBullets={true}
