@@ -88,16 +88,6 @@ export default function EditProduct() {
   return (
     <AuthGuard roles={['ADMIN']}>
       <div className={styles.container}>
-        <div 
-          ref={headerRef}
-          className={`${styles.stickyHeader} ${isSticky ? styles.sticky : ''}`}
-        >
-          <Link href="/" className={styles.backLink}>
-            <span className={styles.backIcon}>&larr;</span>
-            Back to Products
-          </Link>
-        </div>
-
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-2xl font-bold mb-6">Edit Product</h1>
           <ProductForm initialData={product} onSubmit={handleSubmit} />

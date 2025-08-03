@@ -78,16 +78,6 @@ export default function ProductDetail() {
 
   return (
     <div className={styles.container}>
-      <div 
-        ref={headerRef}
-        className={`${styles.stickyHeader} ${isSticky ? styles.sticky : ''}`}
-      >
-        <Link href="/" className={styles.backLink}>
-          <span className={styles.backIcon}>&larr;</span>
-          Back to Products
-        </Link>
-      </div>
-
       <div className={styles.productCard}>
         <div className={styles.gridContainer}>
           {/* Details Section */}
@@ -98,6 +88,10 @@ export default function ProductDetail() {
               <div className={styles.metaItem}>
                 <div className={styles.metaLabel}>SKU</div>
                 <div className={styles.metaValue}>{product.sku}</div>
+              </div>
+              <div className={styles.metaItem}>
+                <div className={styles.metaLabel}>Product Name</div>
+                <div className={styles.metaValue}>{product.name}</div>
               </div>
               <div className={styles.metaItem}>
                 <div className={styles.metaLabel}>Code</div>
@@ -148,7 +142,7 @@ export default function ProductDetail() {
               </ul>
             </div>
 
-            {/* Additional Info */}
+            {/* Additional Product Info */}
             <div className={styles.detailsContainer}>
               <h2 className={styles.sectionTitle}>Product Details</h2>
               
@@ -169,7 +163,7 @@ export default function ProductDetail() {
               {product.thingsToRemember && (
                 <div className={styles.detailItem}>
                   <div className={styles.detailLabel}>Notes:</div>
-                  <div className={styles.detailValue}>{product.thingsToRemember}</div>
+                  <div className={`${styles.detailValue} ${styles.preserveFormatting}`}>{product.thingsToRemember}</div>
                 </div>
               )}
               {product.fabricType && (
@@ -180,12 +174,35 @@ export default function ProductDetail() {
               )}
             </div>
 
-            <Link 
-              href={`/products/${product.id}/edit`} 
-              className={styles.editButton}
-            >
-              Edit Product
-            </Link>
+            {/* Additional Info Section */}
+            <div className={styles.detailsContainer}>
+              <div className={styles.additionalInfo}>
+                <div className={styles.infoItem}>
+                  <div className={styles.infoLabel}>Location</div>
+                  <div className={styles.infoValue}>{product.location || 'N/A'}</div>
+                </div>
+                <div className={styles.infoItem}>
+                  <div className={styles.infoLabel}>Last Updated By</div>
+                  <div className={styles.infoValue}>{product.lastUpdatedBy || 'N/A'}</div>
+                </div>
+                <div className={styles.infoItem}>
+                  <div className={styles.infoLabel}>Last Updated At</div>
+                  <div className={styles.infoValue}>
+                    {product.lastUpdatedAt 
+                      ? new Date(product.lastUpdatedAt).toLocaleString() 
+                      : 'N/A'}
+                  </div>
+                </div>
+              </div>
+            </div>
+              <div className={styles.detailsContainer}>
+                <Link 
+                  href={`/products/${product.id}/edit`} 
+                  className={styles.editButton}
+                >
+                  Edit Product
+                </Link>
+              </div>
           </div>
 
           {/* Images Section */}
@@ -232,26 +249,6 @@ export default function ProductDetail() {
                   <p>No fabric images available</p>
                 </div>
               )}
-            </div>
-            
-            {/* Additional Info Section */}
-            <div className={styles.additionalInfo}>
-              <div className={styles.infoItem}>
-                <div className={styles.infoLabel}>Location</div>
-                <div className={styles.infoValue}>{product.location || 'N/A'}</div>
-              </div>
-              <div className={styles.infoItem}>
-                <div className={styles.infoLabel}>Last Updated By</div>
-                <div className={styles.infoValue}>{product.lastUpdatedBy || 'N/A'}</div>
-              </div>
-              <div className={styles.infoItem}>
-                <div className={styles.infoLabel}>Last Updated At</div>
-                <div className={styles.infoValue}>
-                  {product.lastUpdatedAt 
-                    ? new Date(product.lastUpdatedAt).toLocaleString() 
-                    : 'N/A'}
-                </div>
-              </div>
             </div>
           </div>
         </div>

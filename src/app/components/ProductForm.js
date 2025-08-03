@@ -321,42 +321,6 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
           Add Supplier
         </Button>
       </div>
-
-      {/* Location and Last Updated Info */}
-      <div className={styles.section}>
-        <Typography variant="h6" className={styles.sectionTitle}>
-          Additional Information
-        </Typography>
-        <div className={styles.grid}>
-          <TextField
-            label="Location"
-            name="location"
-            value={formData.location || ''}
-            onChange={handleChange}
-            fullWidth
-          />
-          
-          {initialData.id && (
-            <div className={styles.infoGroup}>
-              <div className={styles.infoLabel}>Last Updated By:</div>
-              <div className={styles.infoValue}>
-                {initialData.lastUpdatedBy || 'N/A'}
-              </div>
-            </div>
-          )}
-          
-          {initialData.id && (
-            <div className={styles.infoGroup}>
-              <div className={styles.infoLabel}>Last Updated At:</div>
-              <div className={styles.infoValue}>
-                {initialData.lastUpdatedAt 
-                  ? new Date(initialData.lastUpdatedAt).toLocaleString() 
-                  : 'N/A'}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
       
       {/* Size Range, Packaging Description, and Things to Remember */}
       <div className={styles.section}>
@@ -402,6 +366,42 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
             fullWidth
             placeholder="e.g., Cotton, Polyester"
           />
+        </div>
+      </div>
+
+      {/* Location and Last Updated Info */}
+      <div className={styles.section}>
+        <Typography variant="h6" className={styles.sectionTitle}>
+          Additional Information
+        </Typography>
+        <div className={styles.grid}>
+          <TextField
+            label="Location"
+            name="location"
+            value={formData.location || ''}
+            onChange={handleChange}
+            fullWidth
+          />
+          
+          {initialData.id && (
+            <div className={styles.infoGroup}>
+              <div className={styles.infoLabel}>Last Updated By:</div>
+              <div className={styles.infoValue}>
+                {initialData.lastUpdatedBy || 'N/A'}
+              </div>
+            </div>
+          )}
+          
+          {initialData.id && (
+            <div className={styles.infoGroup}>
+              <div className={styles.infoLabel}>Last Updated At:</div>
+              <div className={styles.infoValue}>
+                {initialData.lastUpdatedAt 
+                  ? new Date(initialData.lastUpdatedAt).toLocaleString() 
+                  : 'N/A'}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

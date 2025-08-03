@@ -49,7 +49,7 @@ export default function Header() {
         <div className={styles.brand}>
           <Link href="/" className={styles.logoLink}>
             <div className={styles.logo}>👕</div>
-            <h1 className={styles.title}>Kily Clothing Inventory</h1>
+            <h1 className={styles.title}>Kily Clothing</h1>
           </Link>
         </div>
         
@@ -61,7 +61,7 @@ export default function Header() {
         <div className={`${styles.navContainer} ${isMenuOpen ? styles.active : ''}`}>
           {role !== null && ( // Only render when role is available
             <>
-              <nav className={styles.nav}>
+              <nav className={styles.userSection}>
                 <Link href="/" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>
                   Dashboard
                 </Link>

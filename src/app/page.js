@@ -54,7 +54,7 @@ export default function Home() {
       <div 
         ref={headerRef}
         className={`${styles.stickyHeader} ${isSticky ? styles.sticky : ''}`}
-        style={{ top: isSticky ? '80px' : '0' }}
+        style={{ top: isSticky ? '67px' : '0' }}
       >
         <div className={styles.searchContainer}>
           <SearchBar onSearch={handleSearch} />

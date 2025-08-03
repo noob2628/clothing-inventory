@@ -180,6 +180,15 @@
   transition: background 0.2s;
 }
 
+.submitButton {
+  background-color: var(--accent) !important;
+  padding: 12px 30px !important;
+  font-size: 1rem !important;
+  margin-top: 30px;
+  height: 50px;
+}
+
+
 .editButton:hover {
   background: #c0392b;
 }
@@ -248,13 +257,13 @@
 }
 
 .detailItem {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .detailLabel {
   font-weight: 600;
   color: #555;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   font-size: 0.95rem;
 }
 
@@ -265,7 +274,8 @@
   line-height: 1.5;
 }
 
-/* For long text in notes */
-.detailValue.notes {
+/* Preserve line breaks and formatting */
+.preserveFormatting {
   white-space: pre-wrap;
+  word-wrap: break-word;
 }

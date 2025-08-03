@@ -22,6 +22,7 @@ const mapRowToProduct = (row) => ({
   fabricType: row.fabric_type,
 });
 
+
 export const readData = async () => {
   try {
     const res = await query('SELECT * FROM products');
@@ -42,7 +43,7 @@ export const createProduct = async (product) => {
     `INSERT INTO products (
       id, sku, name, code, variations, product_images, 
       fabric_images, category, suppliers, sizes,
-      last_updated_by, last_updated_at, location, size_range, packaging_description, things_to_remember
+      last_updated_by, last_updated_at, location, size_range, packaging_description, things_to_remember, fabric_type
     ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *`,
     [
       product.id,
