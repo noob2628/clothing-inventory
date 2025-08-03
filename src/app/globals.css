@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
+/* let the browser handle vertical swipes on the gallery */
+.image-gallery-slide,
+.image-gallery-image {
+  touch-action: pan-y;
+}
+
+
 :root {
   --primary: #2d2d2d;
   --secondary: #f8f8f8;
