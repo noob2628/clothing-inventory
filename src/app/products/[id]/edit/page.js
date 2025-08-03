@@ -2,21 +2,22 @@
 'use client';
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
+import { CircularProgress } from '@mui/material';
 import ProductForm from '@/components/ProductForm';
-import Link from 'next/link';
-import styles from '../ProductDetail.module.css';
 import AuthGuard from '@/components/AuthGuard';
+import styles from '../ProductDetail.module.css';
 
 export default function EditProduct() {
   const { id } = useParams();
   const router = useRouter();
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isSticky, setIsSticky] = useState(false);
   const headerRef = useRef(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
+      setLoading(true);
       try {
         const res = await fetch(`/api/products/${id}`);
         if (!res.ok) {
@@ -27,6 +28,8 @@ export default function EditProduct() {
       } catch (err) {
         console.error(err);
         setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
     
@@ -36,7 +39,7 @@ export default function EditProduct() {
   useEffect(() => {
     const handleScroll = () => {
       if (headerRef.current) {
-        setIsSticky(window.scrollY > headerRef.current.offsetHeight);
+        // you can use this to stick anything up top if needed
       }
     };
     
@@ -45,6 +48,7 @@ export default function EditProduct() {
   }, []);
 
   const handleSubmit = async (formData) => {
+    setLoading(true);
     try {
       const res = await fetch(`/api/products/${id}`, {
         method: 'PUT',
@@ -60,9 +64,21 @@ export default function EditProduct() {
     } catch (err) {
       console.error(err);
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  // Error state
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -77,14 +93,7 @@ export default function EditProduct() {
     );
   }
 
-  if (!product) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-lg">Loading product data...</div>
-      </div>
-    );
-  }
-
+  // Once loaded
   return (
     <AuthGuard roles={['ADMIN']}>
       <div className={styles.container}>

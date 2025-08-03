@@ -1,8 +1,10 @@
 // src/app/products/[id]/page.js
 'use client';
+
 import 'react-image-gallery/styles/css/image-gallery.css';
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
+import { CircularProgress } from '@mui/material';
 import Link from 'next/link';
 import { sizeFields, getLabel } from '@/lib/sizeFields';
 import dynamic from 'next/dynamic';
@@ -10,32 +12,36 @@ import styles from './ProductDetail.module.css';
 
 const ImageGallery = dynamic(
   () => import('react-image-gallery').then(mod => mod.default),
-  { ssr: false, loading: () => <div className={styles.emptyGallery}>Loading images...</div> }
+  {
+    ssr: false,
+    loading: () => <div className={styles.emptyGallery}>Loading images...</div>
+  }
 );
 
 export default function ProductDetail() {
   const { id } = useParams();
   const router = useRouter();
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isSticky, setIsSticky] = useState(false);
   const headerRef = useRef(null);
+  const [isSticky, setIsSticky] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
+      setLoading(true);
       try {
         const res = await fetch(`/api/products/${id}`);
-        if (!res.ok) {
-          throw new Error(`Failed to fetch product: ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`Failed to fetch product: ${res.status}`);
         const data = await res.json();
         setProduct(data);
       } catch (err) {
         console.error(err);
         setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
-    
     if (id) fetchProduct();
   }, [id]);
 
@@ -45,24 +51,25 @@ export default function ProductDetail() {
         setIsSticky(window.scrollY > headerRef.current.offsetHeight);
       }
     };
-    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <CircularProgress />
+      </div>
+    );
+  }
 
   if (error) {
     return (
       <div className={styles.container}>
         <div className="error-message">Error: {error}</div>
-        <button onClick={() => router.push('/')}>Back to Home</button>
-      </div>
-    );
-  }
-
-  if (!product) {
-    return (
-      <div className={styles.container}>
-        <div className="spinner"></div>
+        <button onClick={() => router.push('/')} className="mt-4 px-4 py-2 bg-red-500 text-white rounded">
+          Back to Home
+        </button>
       </div>
     );
   }
@@ -71,7 +78,6 @@ export default function ProductDetail() {
     original: img,
     thumbnail: img
   }));
-
   const fabricImages = product.fabricImages.map(img => ({
     original: img,
     thumbnail: img

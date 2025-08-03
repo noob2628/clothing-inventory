@@ -1,7 +1,7 @@
 // src/app/components/ProductCard.js
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
-import { IconButton, useMediaQuery } from '@mui/material';
+import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 export default function ProductCard({ product, onDelete }) {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [role, setRole] = useState('USER');
-  const isMobile = useMediaQuery('(max-width:768px)'); // Detect mobile screens
+  const isMobile = useMediaQuery('(max-width:768px)');
 
   useEffect(() => {
     setRole(getUserRole());
@@ -29,70 +29,100 @@ export default function ProductCard({ product, onDelete }) {
   };
 
   return (
-    <div className="bg-white rounded-xl overflow-hidden shadow-[var(--card-shadow)] transition-transform hover:scale-[1.02]">
+    <div className="
+        bg-white
+        rounded-xl
+        overflow-hidden
+        shadow-[0_4px_20px_rgba(0,0,0,0.1)]
+        transition-all
+        duration-200
+        hover:shadow-[0_8px_24px_rgba(0,0,0,0,0.2)]
+        hover:scale-[1.02]
+        flex
+        flex-col
+        items-center
+        text-center
+      ">
       
-      <div className="p-4">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="font-bold text-lg truncate">{product.name}</h3>
-          <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">
-            {product.category}
-          </span>
-        </div>
-        
-        <p className="text-sm text-gray-600 mb-3">SKU: {product.sku}</p>
-        
-        <div className="flex justify-between mt-4">
-            <IconButton 
-            href={`/products/${product.id}`} 
-            className="text-gray-600"
+      <div className="p-6 w-full flex flex-col items-center justify-center text-center space-y-2">
+        {/* SKU 
+        <span className="inline-block bg-pink-50 text-pink-600 text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full">
+          {product.sku}
+        </span>
+        */}
+
+        {/* Product Name */}
+        <h3 className="font-[‘Playfair Display’,serif] text-2xl md:text-3xl text-gray-800 truncate">
+          {product.name}
+        </h3>
+
+        {/* Item Code */}
+        <p className="text-sm text-gray-500 tracking-wide">Item Code: <span className="font-medium">{product.sku}</span></p>
+
+        {/* Action Buttons */}
+        <div className="flex items-center justify-center gap-3 pt-4">
+          <Tooltip title="View details">
+            <IconButton
+              href={`/products/${product.id}`}
+              size="medium"
+              color="primary"
+              variant="contained"
             >
-            <VisibilityIcon />
+              <VisibilityIcon />
             </IconButton>
-            
-            {role === 'ADMIN' && (
+          </Tooltip>
+
+          {role === 'ADMIN' && (
             <>
-                <IconButton 
-                href={`/products/${product.id}/edit`} 
-                className="text-blue-500"
+              <Tooltip title="Edit product">
+                <IconButton
+                  href={`/products/${product.id}/edit`}
+                  size="medium"
+                  color="secondary"
+                  variant="contained"
                 >
-                <EditIcon />
+                  <EditIcon />
                 </IconButton>
-                
-                <IconButton 
-                onClick={() => setDeleteOpen(true)} 
-                className="text-red-500"
+              </Tooltip>
+              <Tooltip title="Delete product">
+                <IconButton
+                  onClick={() => setDeleteOpen(true)}
+                  size="medium"
+                  color="error"
+                  variant="contained"
                 >
-                <DeleteIcon />
+                  <DeleteIcon />
                 </IconButton>
+              </Tooltip>
             </>
-            )}
+          )}
         </div>
-        
-        {/* Delete Confirmation Modal */}
+
+
         <DeleteConfirmation
-            open={deleteOpen}
-            onClose={() => setDeleteOpen(false)}
-            onConfirm={handleDelete}
-            title={`Delete ${product.name}`}
-            message={`Are you sure you want to delete "${product.name}"? This action cannot be undone.`}
+          open={deleteOpen}
+          onClose={() => setDeleteOpen(false)}
+          onConfirm={handleDelete}
+          title={`Delete ${product.name}`}
+          message={`Are you sure you want to delete "${product.name}"? This action cannot be undone.`}
         />
       </div>
       
-      <div className="h-48 overflow-hidden">
+      <div className="w-full h-48 overflow-y-auto overflow-x-hidden">
         {images.length > 0 ? (
           <ImageGallery
             items={images}
-            showPlayButton={false}
-            showFullscreenButton={false}
-            showNav={!isMobile} // Hide arrows on mobile
-            showThumbnails={false}
-            autoPlay={!isMobile} // Disable auto play on mobile
+            showPlayButton={true}
+            showFullscreenButton={true}
+            showNav={false}
+            showThumbnails={true}
+            autoPlay={!isMobile}
             slideInterval={5000}
-            showBullets={isMobile} // Show bullets on mobile for manual control
+            showBullets={isMobile}
           />
         ) : (
           <div className="bg-gray-100 w-full h-full flex items-center justify-center">
-            <div className="text-4xl">👕</div>
+            <span className="text-4xl">👕</span>
           </div>
         )}
       </div>

@@ -9,7 +9,8 @@ import {
   FormControl,
   Grid,
   IconButton,
-  Typography
+  Typography,
+  CircularProgress
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -59,7 +60,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
   };
 
   const [formData, setFormData] = useState(initialData.id ? initialData : defaultProduct);
-  
+  const [loading, setLoading] = useState(false);
   // Size fields by category
   const sizeFields = {
     TOPS: ['shoulder', 'armhole', 'sleeve', 'sleeveHole', 'underarmSleeve', 'bust', 'middleWidth', 'lowerWidth', 'sideLength', 'middleLength'],
@@ -100,17 +101,19 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const updatedData = {
-      ...formData,
-      lastUpdatedBy: username,
-      location: formData.location || 'Warehouse A'
-    };
-    
-    onSubmit(updatedData);
+    setLoading(true);
+    const updatedData = { ...formData, lastUpdatedBy: username, location: formData.location || 'Warehouse A' };
+    try {
+      await onSubmit(updatedData);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
@@ -412,7 +415,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
         className={styles.submitButton}
         fullWidth
       >
-        {initialData.id ? 'Update Product' : 'Create Product'}
+        {loading ? <CircularProgress size={24} /> : (initialData.id ? 'Update Product' : 'Create Product')}
       </Button>
     </form>
   );
