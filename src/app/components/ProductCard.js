@@ -1,5 +1,7 @@
 // src/app/components/ProductCard.js
-import ImageGallery from 'react-image-gallery';
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+//import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
 import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -108,20 +110,31 @@ export default function ProductCard({ product, onDelete }) {
         />
       </div>
       
-      <div className="w-full h-48 overflow-y-auto overflow-x-hidden">
+      <div className="w-full h-48 overflow-hidden relative">
         {images.length > 0 ? (
-          <ImageGallery
-            items={images}
-            showPlayButton={true}
-            showFullscreenButton={true}
-            showNav={!isMobile}
-            showThumbnails={true}
-            autoPlay={!isMobile}
-            slideInterval={5000}
-            showBullets={isMobile}
-            disableSwipe={false}                   // <— turn off swipe handling
-            preventDefaultTouchmoveEvent={false}  // <— let touchmove through
-          />
+          <Carousel
+            showArrows={true}
+            showStatus={false}
+            showThumbs={false}
+            showIndicators={images.length > 1}
+            dynamicHeight={false}
+            swipeable={true}
+            emulateTouch={true}
+            preventMovementUntilSwipeScrollTolerance={true}
+            swipeScrollTolerance={50}
+            className="product-carousel"
+          >
+            {images.map((img, index) => (
+              <div key={index} className="h-48 flex items-center justify-center">
+                <img 
+                  src={img.original} 
+                  alt={`${product.name} ${index + 1}`}
+                  className="max-h-full max-w-full object-contain"
+                  draggable="false"
+                />
+              </div>
+            ))}
+          </Carousel>
         ) : (
           <div className="bg-gray-100 w-full h-full flex items-center justify-center">
             <span className="text-4xl">👕</span>

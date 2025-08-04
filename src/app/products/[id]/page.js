@@ -163,7 +163,7 @@ export default function ProductDetail() {
               {product.packagingDescription && (
                 <div className={styles.detailItem}>
                   <div className={styles.detailLabel}>Packaging:</div>
-                  <div className={styles.detailValue}>{product.packagingDescription}</div>
+                  <div className={`${styles.detailValue} ${styles.preserveFormatting}`}>{product.packagingDescription}</div>
                 </div>
               )}
               

@@ -175,3 +175,32 @@ a {
     padding-top: 70px;
   }
 }
+/* src/app/globals.css or component CSS */
+.product-carousel .carousel .slider-wrapper {
+  overflow: visible !important;
+  height: 100%;
+}
+
+.product-carousel .carousel .slider {
+  touch-action: pan-y;
+  height: 100%;
+}
+
+.product-carousel .carousel .slide {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: #f8f8f8;
+}
+
+.product-carousel .carousel .slide > div {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Fix for touch scrolling */
+.product-carousel .carousel .slide img {
+  touch-action: pan-y;
+}
