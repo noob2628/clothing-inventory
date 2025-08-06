@@ -57,12 +57,13 @@ export default function LoginPage() {
           <button type="submit" className={styles.loginButton}>
             Login
           </button>
-          
+          {/*
           <div className={styles.credentials}>
             <p>Try these accounts:</p>
             <p><strong>USER:</strong> user / Temp123*</p>
             <p><strong>ADMIN:</strong> admin / Temp123*</p>
           </div>
+          */}
         </form>
       </div>
     </div>
