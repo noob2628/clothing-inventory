@@ -5,12 +5,14 @@ import { useRouter } from 'next/navigation';
 import { setUserSession } from '@/lib/auth';
 import styles from './LoginPage.module.css';
 import Link from 'next/link';
+import { FaEye, FaEyeSlash, FaLock, FaUser } from 'react-icons/fa';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e) => {
@@ -54,26 +56,42 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
             <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              disabled={isLoading}
-            />
+            <div className={styles.inputContainer}>
+              <FaUser className={styles.inputIcon} />
+              <input
+                type="text"
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                disabled={isLoading}
+                className={styles.inputWithIcon}
+              />
+            </div>
           </div>
           
           <div className={styles.formGroup}>
             <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              disabled={isLoading}
-            />
+            <div className={styles.inputContainer}>
+              <FaLock className={styles.inputIcon} />
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={isLoading}
+                className={styles.inputWithIcon}
+              />
+              <button
+                type="button"
+                className={styles.passwordToggle}
+                onClick={() => setShowPassword(!showPassword)}
+                disabled={isLoading}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </div>
           
           {error && (
@@ -89,7 +107,10 @@ export default function LoginPage() {
             disabled={isLoading}
           >
             {isLoading ? (
-              <div className={styles.spinner}></div>
+              <>
+                <div className={styles.spinner}></div>
+                <span>Authenticating...</span>
+              </>
             ) : (
               'Login'
             )}

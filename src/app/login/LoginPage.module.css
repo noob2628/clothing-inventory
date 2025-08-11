@@ -162,3 +162,71 @@
   background-color: #a0aec0;
   cursor: not-allowed;
 }
+
+.inputContainer {
+  position: relative;
+}
+
+.inputWithIcon {
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+  z-index: 10;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #777;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.passwordToggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loginButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Add subtle transition to inputs */
+.formGroup input {
+  transition: all 0.3s ease;
+}
+
+/* Add focus effect */
+.formGroup input:focus {
+  box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.2);
+}
+
+/* Enhance error message */
+.error {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Add subtle hover effect to login button */
+.loginButton:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 108, 247, 0.25);
+}

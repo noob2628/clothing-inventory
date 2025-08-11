@@ -109,6 +109,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
     // Clean data before submission
     const cleanData = {
       ...formData,
+      lastUpdatedBy: username,
       productImages: formData.productImages.filter(url => url.trim() !== ''),
       fabricImages: formData.fabricImages.filter(url => url.trim() !== '')
     };
@@ -334,7 +335,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
               <TextField
                 fullWidth
                 value={img}
-                onChange={(e) => handleArrayChange('productImages', index, e.target.value)}
+                onChange={(e) => handleArrayChange('fabricImages', index, e.target.value)} // Fix field name
                 placeholder="Image URL"
                 error={!isValidUrl(img)}
                 helperText={!isValidUrl(img) && "Invalid URL"}
@@ -342,7 +343,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
             </Grid>
             <Grid item xs={2}>
               <IconButton 
-                onClick={() => removeArrayItem('fabricImages', index)}
+                onClick={() => removeArrayItem('fabricImages', index)} // Fix field name
                 color="error"
               >
                 <RemoveIcon />

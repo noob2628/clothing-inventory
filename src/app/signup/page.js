@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import styles from './SignupPage.module.css';
 import { setUserSession } from '@/lib/auth';
+import { FaEye, FaEyeSlash, FaLock, FaUser } from 'react-icons/fa';
 
 export default function SignupPage() {
   const [username, setUsername] = useState('');
@@ -13,6 +14,8 @@ export default function SignupPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,7 +67,7 @@ export default function SignupPage() {
     }
   };
 
-  return (
+   return (
     <div className={styles.container}>
       <div className={styles.card}>
         <div className={styles.logo}>👕</div>
@@ -80,35 +83,63 @@ export default function SignupPage() {
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
             <label>Username</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              disabled={isLoading}
-            />
+            <div className={styles.inputContainer}>
+              <FaUser className={styles.inputIcon} />
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                disabled={isLoading}
+                className={styles.inputWithIcon}
+              />
+            </div>
           </div>
           
           <div className={styles.formGroup}>
             <label>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              disabled={isLoading}
-            />
+            <div className={styles.inputContainer}>
+              <FaLock className={styles.inputIcon} />
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={isLoading}
+                className={styles.inputWithIcon}
+              />
+              <button
+                type="button"
+                className={styles.passwordToggle}
+                onClick={() => setShowPassword(!showPassword)}
+                disabled={isLoading}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </div>
           
           <div className={styles.formGroup}>
             <label>Confirm Password</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              disabled={isLoading}
-            />
+            <div className={styles.inputContainer}>
+              <FaLock className={styles.inputIcon} />
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                disabled={isLoading}
+                className={styles.inputWithIcon}
+              />
+              <button
+                type="button"
+                className={styles.passwordToggle}
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                disabled={isLoading}
+              >
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </div>
           
           <button 
@@ -117,7 +148,10 @@ export default function SignupPage() {
             disabled={isLoading}
           >
             {isLoading ? (
-              <div className={styles.spinner}></div>
+              <>
+                <div className={styles.spinner}></div>
+                <span>Creating Account...</span>
+              </>
             ) : (
               'Create Account'
             )}

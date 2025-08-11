@@ -56,7 +56,7 @@ export const createProduct = async (product) => {
       product.category,
       product.suppliers,
       product.sizes,
-      product.lastUpdatedBy || 'admin',
+      product.lastUpdatedBy,
       new Date().toISOString(),
       product.location || 'Warehouse A',
       product.sizeRange || '',
@@ -75,7 +75,6 @@ export const updateProduct = async (id, updates) => {
   const updatedProduct = { 
     ...product, 
     ...updates,
-    lastUpdatedBy: updates.lastUpdatedBy || 'admin',
     lastUpdatedAt: new Date().toISOString()
   };
   
