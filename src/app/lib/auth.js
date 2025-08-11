@@ -1,40 +1,43 @@
 //src/app/lib/auth.js
-// Simple in-memory authentication (client-side only)|}
-export const users = [
-  {
-    username: "user",
-    password: "Temp123*",
-    role: "USER"
-  },
-  {
-    username: "admin",
-    password: "Temp123*",
-    role: "ADMIN"
-  }
-];
-
-export const authenticate = (username, password) => {
-  return users.find(
-    user => user.username === username && user.password === password
-  );
-};
-
 // Client-side only functions
 export const getUserRole = () => {
-  if (typeof window === 'undefined') return null; // Return null during SSR
-  return localStorage.getItem('userRole') || 'USER';
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('userRole');
+};
+
+export const getUsername = () => {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('username');
+};
+
+export const getUserId = () => {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('userId');
 };
 
 export const setUserSession = (user) => {
   if (typeof window !== 'undefined') {
     localStorage.setItem('userRole', user.role);
     localStorage.setItem('username', user.username);
+    localStorage.setItem('userId', user.id);
+    // Trigger event to update UI
+    window.dispatchEvent(new Event('authChange'));
   }
 };
 
 export const logout = () => {
   if (typeof window !== 'undefined') {
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('username');
+    clearUserSession();
+    // Trigger event to update UI
+    window.dispatchEvent(new Event('authChange'));
   }
 };
+
+export const clearUserSession = () => {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('username');
+    localStorage.removeItem('userId');
+  }
+};
+

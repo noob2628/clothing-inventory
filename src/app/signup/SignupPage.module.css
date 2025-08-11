@@ -1,3 +1,5 @@
+/* src/app/signup/SignupPage.module.css */
+
 .container {
   display: flex;
   justify-content: center;
@@ -17,6 +19,7 @@
   text-align: center;
 }
 
+/* optional logo/title styles if you want them */
 .logo {
   font-size: 3.5rem;
   margin-bottom: 20px;
@@ -27,11 +30,17 @@
   font-size: 1.8rem;
   font-weight: 700;
   color: #2d2d2d;
-  margin-bottom: 30px;
+  margin-bottom: 18px;
 }
 
+/* This is the form wrapper you reference in the component */
+.form {
+  width: 100%;
+}
+
+/* used in component as styles.formGroup */
 .formGroup {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   text-align: left;
 }
 
@@ -42,7 +51,8 @@
   color: #555;
 }
 
-.formGroup input {
+.formGroup input,
+.formGroup select {
   width: 100%;
   padding: 12px 15px;
   border: 1px solid #ddd;
@@ -51,18 +61,26 @@
   transition: border-color 0.3s;
 }
 
-.formGroup input:focus {
+.formGroup input:focus,
+.formGroup select:focus {
   border-color: #4a6cf7;
   outline: none;
 }
 
-.error {
-  color: #e74c3c;
-  margin: 15px 0;
-  font-size: 0.9rem;
+/* roleSelect used by your <select> */
+.roleSelect {
+  appearance: none;
 }
 
-.loginButton {
+/* error message */
+.error {
+  color: #e74c3c;
+  margin: 12px 0;
+  font-size: 0.95rem;
+}
+
+/* submit button (maps to styles.submitButton) */
+.submitButton {
   width: 100%;
   padding: 14px;
   background: #4a6cf7;
@@ -75,90 +93,68 @@
   transition: background 0.3s;
 }
 
-.loginButton:hover {
+.submitButton:hover {
   background: #3a5ae0;
 }
 
+/* optional credentials block (if you add one later) */
 .credentials {
-  margin-top: 25px;
-  padding-top: 20px;
+  margin-top: 20px;
+  padding-top: 18px;
   border-top: 1px solid #eee;
   font-size: 0.85rem;
   color: #666;
 }
 
 .credentials p {
-  margin: 8px 0;
+  margin: 6px 0;
 }
 
 .credentials strong {
   color: #333;
 }
-
-.signupLink {
+/* Add to existing styles */
+.loginLink {
+  text-align: center;
   margin-top: 20px;
-  font-size: 0.9rem;
+  font-size: 14px;
 }
 
-.signupLink a {
-  color: #4a6cf7;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.signupLink a:hover {
+.loginLink a {
+  color: #3182ce;
   text-decoration: underline;
 }
 
-.loginButton {
-  position: relative;
+.loginLink a:hover {
+  color: #2c5282;
 }
 
-.spinner {
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top: 2px solid #fff;
-  width: 20px;
-  height: 20px;
-  animation: spin 1s linear infinite;
-  margin: 0 auto;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.formGroup {
+  margin-bottom: 15px;
 }
 
 .error {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   color: #e53e3e;
   background-color: #fed7d7;
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 15px;
+  text-align: center;
 }
 
-.errorIcon {
-  background-color: #e53e3e;
+.submitButton {
+  width: 100%;
+  padding: 12px;
+  background-color: #3182ce;
   color: white;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.2s;
 }
 
-.formGroup input:disabled {
-  background-color: #f1f1f1;
-  cursor: not-allowed;
-}
-
-.loginButton:disabled {
-  background-color: #a0aec0;
-  cursor: not-allowed;
+.submitButton:hover {
+  background-color: #2b6cb0;
 }

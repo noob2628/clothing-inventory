@@ -7,6 +7,10 @@ import AddIcon from '@mui/icons-material/Add';
 import SearchBar from '@/components/SearchBar';
 import ProductCard from '@/components/ProductCard';
 import styles from './HomePage.module.css';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { getUserRole } from '@/lib/auth';
+import Link from 'next/link';
+
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -14,6 +18,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const headerRef = useRef(null);
+  const [role, setRole] = useState(null);
+
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -44,14 +50,15 @@ export default function Home() {
 
   useEffect(() => {
     fetchProducts();
+    const userRole = getUserRole();
+    setRole(userRole);
 
-    const handleScroll = () => {
-      if (headerRef.current) {
-        setIsSticky(window.scrollY > headerRef.current.offsetHeight);
-      }
+    const handleStorageChange = () => {
+      setRole(getUserRole() || '');
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   return (
@@ -110,6 +117,14 @@ export default function Home() {
           <AddIcon />
         </Fab>
       </a>
+      {/*role === 'SUPER_ADMIN' && (
+        <Link href="/signup" className={styles.addUserButton}>
+          <Fab color="secondary" aria-label="add-user">
+            <PersonAddIcon />
+          </Fab>
+        </Link>
+      )*/}
     </div>
+      
   );
 }

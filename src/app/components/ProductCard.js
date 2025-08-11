@@ -20,10 +20,12 @@ export default function ProductCard({ product, onDelete }) {
     setRole(getUserRole());
   }, []);
 
-  const images = product.productImages.map(img => ({
-    original: img,
-    thumbnail: img
-  }));
+  const images = product.productImages
+    .filter(img => img.trim() !== '') // Filter out empty strings
+    .map(img => ({
+      original: img,
+      thumbnail: img
+    }));
 
   const handleDelete = async () => {
     await fetch(`/api/products/${product.id}`, { method: 'DELETE' });
@@ -74,7 +76,7 @@ export default function ProductCard({ product, onDelete }) {
             </IconButton>
           </Tooltip>
 
-          {role === 'ADMIN' && (
+          {role === 'ADMIN' || role === 'SUPER_ADMIN' ? (
             <>
               <Tooltip title="Edit product">
                 <IconButton
@@ -97,7 +99,7 @@ export default function ProductCard({ product, onDelete }) {
                 </IconButton>
               </Tooltip>
             </>
-          )}
+          ):null}
         </div>
 
 

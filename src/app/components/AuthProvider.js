@@ -8,16 +8,15 @@ export default function AuthProvider({ children }) {
   const pathname = usePathname();
   
   useEffect(() => {
-    // Client-side only
     const role = localStorage.getItem('userRole');
     
-    // Redirect to login if not authenticated and not on login page
-    if (!role && pathname !== '/login') {
+    // Update this condition to allow signup page
+    if (!role && !['/login', '/signup'].includes(pathname)) {
       router.push('/login');
     }
     
-    // Redirect to home if authenticated and on login page
-    if (role && pathname === '/login') {
+    // Update this condition to include signup page
+    if (role && ['/login', '/signup'].includes(pathname)) {
       router.push('/');
     }
   }, [pathname, router]);

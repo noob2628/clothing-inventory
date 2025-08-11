@@ -101,16 +101,35 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
     }));
   };
 
+  // Add validation before submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const updatedData = { ...formData, lastUpdatedBy: username, location: formData.location || 'Warehouse A' };
+    
+    // Clean data before submission
+    const cleanData = {
+      ...formData,
+      productImages: formData.productImages.filter(url => url.trim() !== ''),
+      fabricImages: formData.fabricImages.filter(url => url.trim() !== '')
+    };
+    
     try {
-      await onSubmit(updatedData);
+      await onSubmit(cleanData);
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Add URL validation function
+  const isValidUrl = (url) => {
+    if (!url.trim()) return true; // Allow empty during editing
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
     }
   };
 
@@ -280,6 +299,8 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
                 value={img}
                 onChange={(e) => handleArrayChange('productImages', index, e.target.value)}
                 placeholder="Image URL"
+                error={!isValidUrl(img)}
+                helperText={!isValidUrl(img) && "Invalid URL"}
               />
             </Grid>
             <Grid item xs={2}>
@@ -313,8 +334,10 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
               <TextField
                 fullWidth
                 value={img}
-                onChange={(e) => handleArrayChange('fabricImages', index, e.target.value)}
+                onChange={(e) => handleArrayChange('productImages', index, e.target.value)}
                 placeholder="Image URL"
+                error={!isValidUrl(img)}
+                helperText={!isValidUrl(img) && "Invalid URL"}
               />
             </Grid>
             <Grid item xs={2}>

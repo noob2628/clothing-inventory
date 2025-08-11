@@ -39,7 +39,7 @@ export default function CreateProduct() {
   }
 
   return (
-    <AuthGuard roles={['ADMIN']}>
+    <AuthGuard roles={['ADMIN', 'SUPER_ADMIN']}>
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold mb-6">Create New Product</h1>
         <ProductForm onSubmit={handleSubmit} disabled={loading} />

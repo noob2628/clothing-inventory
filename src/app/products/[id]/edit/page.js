@@ -80,7 +80,7 @@ export default function EditProduct() {
   }
 
   return (
-    <AuthGuard roles={['ADMIN']}>
+    <AuthGuard roles={['ADMIN','SUPER_ADMIN']}>
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold mb-6">Edit Product</h1>
         <ProductForm initialData={product} onSubmit={handleSubmit} />

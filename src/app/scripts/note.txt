@@ -1,0 +1,19 @@
+Injecting SuperAdmin
+
+npm install bcryptjs dotenv pg
+node scripts/create-super-admin.js
+
+
+Direct Inject to Database
+INSERT INTO users (username, password, role) 
+VALUES (
+  'superadmin', 
+  '$2b$10$Gd6TLkpN8JKYWTE7azL1e.jv0jM/itLPaLHprsTM9mVdTFT./4IEq',  -- Replace with bcrypt hash
+  'SUPER_ADMIN'
+);
+
+
+To generate the bcrypt hash:
+Open in Temminal : Node
+const bcrypt = require('bcryptjs');
+bcrypt.hash('Temp123*', 10).then(console.log);
