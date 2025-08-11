@@ -10,6 +10,8 @@ export default function SuperAdminPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [updatingRoles, setUpdatingRoles] = useState({});
+  const [deletingUsers, setDeletingUsers] = useState({});
   const router = useRouter();
   const userId = getUserId();
 
@@ -30,7 +32,10 @@ export default function SuperAdminPage() {
 
   const handleRoleChange = async (userId, newRole) => {
     try {
-      await fetch(`/api/users/${userId}`, {
+      setUpdatingRoles(prev => ({ ...prev, [userId]: true }));
+      setError('');
+      
+      const response = await fetch(`/api/users/${userId}`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
@@ -39,34 +44,48 @@ export default function SuperAdminPage() {
         body: JSON.stringify({ role: newRole })
       });
       
+      if (!response.ok) throw new Error('Failed to update role');
+      
       setUsers(users.map(user => 
         user.id === userId ? { ...user, role: newRole } : user
       ));
     } catch (err) {
-      setError('Failed to update role');
+      setError(err.message || 'Failed to update role');
+    } finally {
+      setUpdatingRoles(prev => ({ ...prev, [userId]: false }));
     }
   };
 
   const handleDeleteUser = async (userId) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      try {
-        const response = await fetch(`/api/users/${userId}`, {
-          method: 'DELETE',
-          headers: { 
-            'X-User-Id': getUserId()
-          }
-        });
-        
-        if (!response.ok) throw new Error('Failed to delete user');
-        
-        setUsers(users.filter(user => user.id !== userId));
-      } catch (err) {
-        setError('Failed to delete user');
-      }
+    if (!window.confirm('Are you sure you want to delete this user?')) return;
+    
+    try {
+      setDeletingUsers(prev => ({ ...prev, [userId]: true }));
+      setError('');
+      
+      const response = await fetch(`/api/users/${userId}`, {
+        method: 'DELETE',
+        headers: { 
+          'X-User-Id': getUserId()
+        }
+      });
+      
+      if (!response.ok) throw new Error('Failed to delete user');
+      
+      setUsers(users.filter(user => user.id !== userId));
+    } catch (err) {
+      setError(err.message || 'Failed to delete user');
+    } finally {
+      setDeletingUsers(prev => ({ ...prev, [userId]: false }));
     }
   };
 
-  if (loading) return <div className={styles.loading}>Loading...</div>;
+  if (loading) return (
+    <div className={styles.loadingContainer}>
+      <div className={styles.loadingSpinner}></div>
+      <p>Loading users...</p>
+    </div>
+  );
 
   return (
     <AuthGuard roles={['SUPER_ADMIN']}>
@@ -87,22 +106,31 @@ export default function SuperAdminPage() {
               <tr key={user.id}>
                 <td>{user.username}</td>
                 <td>
-                  <select
-                    value={user.role}
-                    onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                    className={styles.roleSelect}
-                  >
-                    <option value="USER">User</option>
-                    <option value="ADMIN">Admin</option>
-                    <option value="SUPER_ADMIN">Super Admin</option>
-                  </select>
+                  <div className={styles.roleContainer}>
+                    <select
+                      value={user.role}
+                      onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                      className={styles.roleSelect}
+                      disabled={updatingRoles[user.id]}
+                    >
+                      <option value="USER">User</option>
+                      <option value="ADMIN">Admin</option>
+                      <option value="SUPER_ADMIN">Super Admin</option>
+                    </select>
+                    {updatingRoles[user.id] && (
+                      <span className={styles.miniSpinner}></span>
+                    )}
+                  </div>
                 </td>
                 <td>
                   <button 
                     onClick={() => handleDeleteUser(user.id)}
                     className={styles.deleteButton}
+                    disabled={deletingUsers[user.id]}
                   >
-                    Delete
+                    {deletingUsers[user.id] ? (
+                      <span className={styles.buttonSpinner}></span>
+                    ) : 'Delete'}
                   </button>
                 </td>
               </tr>

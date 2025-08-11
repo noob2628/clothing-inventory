@@ -21,10 +21,17 @@
   background-color: #f2f2f2;
 }
 
+.roleContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .roleSelect {
   padding: 8px;
   border-radius: 4px;
   border: 1px solid #ccc;
+  flex-grow: 1;
 }
 
 .deleteButton {
@@ -34,27 +41,66 @@
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
+  min-width: 80px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.deleteButton:hover {
+.deleteButton:hover:not(:disabled) {
   background-color: #ff1a1a;
 }
 
-.loading {
-  text-align: center;
-  padding: 2rem;
-  font-size: 1.2rem;
-}
-.logoutButton {
-  background: #4a6cf7;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-bottom: 20px;
+.deleteButton:disabled {
+  background-color: #ff9999;
+  cursor: not-allowed;
 }
 
-.logoutButton:hover {
-  background: #3a5ae0;
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 20px;
+}
+
+.loadingSpinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #4a6cf7;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.miniSpinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #4a6cf7;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.buttonSpinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-left-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.error {
+  background-color: #ffebee;
+  color: #b71c1c;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
 }
