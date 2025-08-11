@@ -1,24 +1,17 @@
 // src/app/super-admin/page.js
 'use client';
 import { useState, useEffect } from 'react';
-import { logout, getUserRole, getUserId } from '@/lib/auth';
+import { getUserId } from '@/lib/auth';
 import styles from './SuperAdminPage.module.css';
 import { useRouter } from 'next/navigation';
 import AuthGuard from '@/components/AuthGuard';
 
 export default function SuperAdminPage() {
-
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const router = useRouter();
   const userId = getUserId();
-
-
-  if (typeof window !== 'undefined' && getUserRole() !== 'SUPER_ADMIN') {
-    useRouter().push('/');
-    return null;
-  }
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -41,7 +34,7 @@ export default function SuperAdminPage() {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
-          'X-User-Id': getUserId() // Add authorization header
+          'X-User-Id': getUserId()
         },
         body: JSON.stringify({ role: newRole })
       });
@@ -54,13 +47,13 @@ export default function SuperAdminPage() {
     }
   };
 
-   const handleDeleteUser = async (userId) => {
+  const handleDeleteUser = async (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
         const response = await fetch(`/api/users/${userId}`, {
           method: 'DELETE',
           headers: { 
-            'X-User-Id': getUserId() // Add authorization header
+            'X-User-Id': getUserId()
           }
         });
         
@@ -77,46 +70,46 @@ export default function SuperAdminPage() {
 
   return (
     <AuthGuard roles={['SUPER_ADMIN']}>
-        <div className={styles.container}>
+      <div className={styles.container}>
         <h1>User Management</h1>
         {error && <div className={styles.error}>{error}</div>}
         
         <table className={styles.userTable}>
-            <thead>
+          <thead>
             <tr>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Actions</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Actions</th>
             </tr>
-            </thead>
-            <tbody>
+          </thead>
+          <tbody>
             {users.map(user => (
-                <tr key={user.id}>
+              <tr key={user.id}>
                 <td>{user.username}</td>
                 <td>
-                    <select
+                  <select
                     value={user.role}
                     onChange={(e) => handleRoleChange(user.id, e.target.value)}
                     className={styles.roleSelect}
-                    >
+                  >
                     <option value="USER">User</option>
                     <option value="ADMIN">Admin</option>
                     <option value="SUPER_ADMIN">Super Admin</option>
-                    </select>
+                  </select>
                 </td>
                 <td>
-                    <button 
+                  <button 
                     onClick={() => handleDeleteUser(user.id)}
                     className={styles.deleteButton}
-                    >
+                  >
                     Delete
-                    </button>
+                  </button>
                 </td>
-                </tr>
+              </tr>
             ))}
-            </tbody>
+          </tbody>
         </table>
-        </div>
+      </div>
     </AuthGuard>
   );
 }
