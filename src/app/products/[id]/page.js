@@ -34,13 +34,14 @@ export default function ProductDetail() {
 
   // Conversion function
   const convertValue = (value, toUnit) => {
+    if (value === '' || value === null) return '';
     if (toUnit === 'cm') return value;
     if (toUnit === 'inch') return value / 2.54;
     return value;
   };
 
-  // Format value with appropriate precision
   const formatValue = (value, unit) => {
+    if (value === '' || value === null) return '';
     if (unit === 'cm') return value.toFixed(1);
     if (unit === 'inch') return value.toFixed(2);
     return value;

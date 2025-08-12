@@ -68,6 +68,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
   const fields = sizeFields[formData.category] || [];
 
   const convertValue = (value, fromUnit, toUnit) => {
+    if (value === '') return '';
     if (fromUnit === toUnit) return value;
     if (fromUnit === 'cm' && toUnit === 'inch') return value / 2.54;
     if (fromUnit === 'inch' && toUnit === 'cm') return value * 2.54;
@@ -101,8 +102,21 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
 
   const handleSizeChange = (e) => {
     const { name, value } = e.target;
-    const numericValue = parseFloat(value) || 0;
     
+    // Allow empty string for deletion
+    if (value === '') {
+      setFormData(prev => ({
+        ...prev,
+        sizes: { 
+          ...prev.sizes, 
+          [name]: ''
+        }
+      }));
+      return;
+    }
+    
+    // Only parse as number if not empty
+    const numericValue = parseFloat(value) || 0;
     setFormData(prev => ({
       ...prev,
       sizes: { 
@@ -141,16 +155,21 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
     e.preventDefault();
     setLoading(true);
     
-    // Convert sizes to CM if currently in inches
-    let sizesToSubmit = formData.sizes;
-    if (unit === 'inch') {
-      sizesToSubmit = convertSizes(formData.sizes, 'inch', 'cm');
+    // Handle empty values in sizes
+    const sizesToSubmit = {};
+    for (const [key, value] of Object.entries(formData.sizes)) {
+      sizesToSubmit[key] = value === '' ? 0 : value;
     }
 
-    // Clean data before submission
+    // Convert to CM if needed
+    let finalSizes = sizesToSubmit;
+    if (unit === 'inch') {
+      finalSizes = convertSizes(sizesToSubmit, 'inch', 'cm');
+    }
+
     const cleanData = {
       ...formData,
-      sizes: sizesToSubmit, // Use converted sizes
+      sizes: finalSizes, // Use converted sizes
       lastUpdatedBy: username,
       productImages: formData.productImages.filter(url => url.trim() !== ''),
       fabricImages: formData.fabricImages.filter(url => url.trim() !== '')
@@ -261,7 +280,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
               label={getLabel(field)}
               name={field}
               type="number"
-              value={formData.sizes[field] || 0}
+              value={formData.sizes[field] === 0 ? '' : formData.sizes[field]}
               onChange={handleSizeChange}
               InputProps={{ 
                 inputProps: { 
@@ -269,6 +288,17 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
                 } 
               }}
               fullWidth
+              onFocus={(e) => {
+                // Clear the field when focused if it's 0
+                if (parseFloat(e.target.value) === 0) {
+                  handleSizeChange({ 
+                    target: { 
+                      name: field, 
+                      value: '' 
+                    }
+                  });
+                }
+              }}
             />
           ))}
         </div>
@@ -361,7 +391,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
       {/* Product Images */}
       <div className={styles.section}>
         <Typography variant="h6" className={styles.sectionTitle}>
-          Product Images
+          Product Images URL Link
         </Typography>
         {formData.productImages.map((img, index) => (
           <Grid container spacing={2} alignItems="center" key={index} className={styles.arrayItem}>
@@ -398,7 +428,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
       {/* Fabric Images */}
       <div className={styles.section}>
         <Typography variant="h6" className={styles.sectionTitle}>
-          Fabric Images
+          Fabric Images URL Link
         </Typography>
         {formData.fabricImages.map((img, index) => (
           <Grid container spacing={2} alignItems="center" key={index} className={styles.arrayItem}>
