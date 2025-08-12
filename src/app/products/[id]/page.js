@@ -9,6 +9,9 @@ import Link from 'next/link';
 import { sizeFields, getLabel } from '@/lib/sizeFields';
 import dynamic from 'next/dynamic';
 import styles from './ProductDetail.module.css';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
 
 const ImageGallery = dynamic(
   () => import('react-image-gallery').then(mod => mod.default),
@@ -26,6 +29,23 @@ export default function ProductDetail() {
   const [error, setError] = useState(null);
   const headerRef = useRef(null);
   const [isSticky, setIsSticky] = useState(false);
+  const [unit, setUnit] = useState('cm'); // New state for unit
+
+
+  // Conversion function
+  const convertValue = (value, toUnit) => {
+    if (toUnit === 'cm') return value;
+    if (toUnit === 'inch') return value / 2.54;
+    return value;
+  };
+
+  // Format value with appropriate precision
+  const formatValue = (value, unit) => {
+    if (unit === 'cm') return value.toFixed(1);
+    if (unit === 'inch') return value.toFixed(2);
+    return value;
+  };
+
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -122,18 +142,47 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            {/* Size Measurements */}
+            {/* Size Measurements Section */}
             <div className={styles.measurementsContainer}>
-              <h2 className={styles.sectionTitle}>Size Measurements (cm)</h2>
+              <div className={styles.unitHeader}>
+                <h2 className={styles.sectionTitle}>
+                  Size Measurements ({unit})
+                </h2>
+                <ButtonGroup variant="outlined" aria-label="Unit toggle">
+                  <Tooltip title="Centimeters">
+                    <Button 
+                      variant={unit === 'cm' ? 'contained' : 'outlined'} 
+                      onClick={() => setUnit('cm')}
+                    >
+                      CM
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="Inches">
+                    <Button 
+                      variant={unit === 'inch' ? 'contained' : 'outlined'} 
+                      onClick={() => setUnit('inch')}
+                    >
+                      Inch
+                    </Button>
+                  </Tooltip>
+                </ButtonGroup>
+              </div>
+              
               <div className={styles.measurementsGrid}>
-                {sizeFields[product.category].map(field => (
-                  <div key={field} className={styles.measurementItem}>
-                    <div className={styles.measurementLabel}>{getLabel(field)}</div>
-                    <div className={styles.measurementValue}>
-                      {product.sizes[field] || 0}
+                {(sizeFields[product.category] || []).map(field => {
+                  const rawValue = product.sizes[field] || 0;
+                  const convertedValue = convertValue(rawValue, unit);
+                  const displayValue = formatValue(convertedValue, unit);
+                  
+                  return (
+                    <div key={field} className={styles.measurementItem}>
+                      <div className={styles.measurementLabel}>{getLabel(field)}</div>
+                      <div className={styles.measurementValue}>
+                        {displayValue}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 

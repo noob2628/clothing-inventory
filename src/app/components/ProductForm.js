@@ -14,7 +14,9 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { getLabel } from '@/lib/sizeFields';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Tooltip from '@mui/material/Tooltip';
+import { getLabel, sizeFields } from '@/lib/sizeFields';
 import styles from './ProductForm.module.css';
 import { getUserRole } from '@/lib/auth';
 
@@ -22,6 +24,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
   
   const role = getUserRole();
   const [username, setUsername] = useState('');
+
   useEffect(() => {
     setUsername(localStorage.getItem('username') || 'admin');
   }, []);
@@ -61,25 +64,57 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
 
   const [formData, setFormData] = useState(initialData.id ? initialData : defaultProduct);
   const [loading, setLoading] = useState(false);
-  // Size fields by category
-  const sizeFields = {
-    TOPS: ['shoulder', 'armhole', 'sleeve', 'sleeveHole', 'underarmSleeve', 'bust', 'middleWidth', 'lowerWidth', 'sideLength', 'middleLength'],
-    'PANTS/SHORT': ['waist', 'length', 'inseam', 'fRise', 'leghole', 'hips'],
-    SKIRT: ['waist', 'sideLength', 'middleLength', 'middleWidth', 'lowerWidth'],
-    DRESS: ['bust', 'shoulder', 'sleeveHole', 'sleeve', 'armhole', 'underarmSleeve', 'waist', 'sideLength', 'middleLength', 'lowerWidth']
+  const [unit, setUnit] = useState('cm'); // New state for unit
+  const fields = sizeFields[formData.category] || [];
+
+  const convertValue = (value, fromUnit, toUnit) => {
+    if (fromUnit === toUnit) return value;
+    if (fromUnit === 'cm' && toUnit === 'inch') return value / 2.54;
+    if (fromUnit === 'inch' && toUnit === 'cm') return value * 2.54;
+    return value;
+  };
+
+  const convertSizes = (sizes, fromUnit, toUnit) => {
+    const converted = {};
+    for (const key in sizes) {
+      converted[key] = convertValue(sizes[key], fromUnit, toUnit);
+    }
+    return converted;
+  };
+
+  const handleUnitChange = (newUnit) => {
+    if (unit === newUnit) return;
+
+    // Convert all size values
+    const convertedSizes = {};
+    Object.keys(formData.sizes).forEach(field => {
+      convertedSizes[field] = convertValue(formData.sizes[field], unit, newUnit);
+    });
+
+    setFormData(prev => ({
+      ...prev,
+      sizes: convertedSizes
+    }));
+    
+    setUnit(newUnit);
+  };
+
+  const handleSizeChange = (e) => {
+    const { name, value } = e.target;
+    const numericValue = parseFloat(value) || 0;
+    
+    setFormData(prev => ({
+      ...prev,
+      sizes: { 
+        ...prev.sizes, 
+        [name]: numericValue
+      }
+    }));
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSizeChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      sizes: { ...prev.sizes, [name]: parseFloat(value) || 0 }
-    }));
   };
 
   const handleArrayChange = (field, index, value) => {
@@ -106,9 +141,16 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
     e.preventDefault();
     setLoading(true);
     
+    // Convert sizes to CM if currently in inches
+    let sizesToSubmit = formData.sizes;
+    if (unit === 'inch') {
+      sizesToSubmit = convertSizes(formData.sizes, 'inch', 'cm');
+    }
+
     // Clean data before submission
     const cleanData = {
       ...formData,
+      sizes: sizesToSubmit, // Use converted sizes
       lastUpdatedBy: username,
       productImages: formData.productImages.filter(url => url.trim() !== ''),
       fabricImages: formData.fabricImages.filter(url => url.trim() !== '')
@@ -122,7 +164,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
       setLoading(false);
     }
   };
-
+  
   // Add URL validation function
   const isValidUrl = (url) => {
     if (!url.trim()) return true; // Allow empty during editing
@@ -179,6 +221,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
               <MenuItem value="PANTS/SHORT">Pants/Short</MenuItem>
               <MenuItem value="SKIRT">Skirt</MenuItem>
               <MenuItem value="DRESS">Dress</MenuItem>
+              <MenuItem value="TERNO">Terno</MenuItem> {/* New option */}
             </Select>
           </FormControl>
         </div>
@@ -186,11 +229,32 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
 
       {/* Size Measurements */}
       <div className={styles.section}>
-        <Typography variant="h6" className={styles.sectionTitle}>
-          Size Measurements (cm)
-        </Typography>
+        <div className={styles.unitHeader}>
+          <Typography variant="h6" className={styles.sectionTitle}>
+            Size Measurements ({unit})
+          </Typography>
+          <ButtonGroup variant="outlined" aria-label="Unit toggle">
+            <Tooltip title="Centimeters">
+              <Button 
+                variant={unit === 'cm' ? 'contained' : 'outlined'} 
+                onClick={() => handleUnitChange('cm')}
+              >
+                CM
+              </Button>
+            </Tooltip>
+            <Tooltip title="Inches">
+              <Button 
+                variant={unit === 'inch' ? 'contained' : 'outlined'} 
+                onClick={() => handleUnitChange('inch')}
+              >
+                Inch
+              </Button>
+            </Tooltip>
+          </ButtonGroup>
+        </div>
+        
         <div className={styles.sizeGrid}>
-          {sizeFields[formData.category].map(field => (
+          {(sizeFields[formData.category] || []).map(field => (
             <TextField
               key={field}
               label={getLabel(field)}
@@ -198,12 +262,18 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
               type="number"
               value={formData.sizes[field] || 0}
               onChange={handleSizeChange}
-              InputProps={{ inputProps: { step: 0.1 } }}
+              InputProps={{ 
+                inputProps: { 
+                  step: unit === 'cm' ? 0.1 : 0.01 
+                } 
+              }}
               fullWidth
             />
           ))}
         </div>
       </div>
+
+
       {/* Size Range, Packaging Description, and Things to Remember */}
       <div className={styles.section}>
         <Typography variant="h6" className={styles.sectionTitle}>
