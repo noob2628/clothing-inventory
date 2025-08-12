@@ -6,13 +6,21 @@ const dressFields = ['bust', 'shoulder', 'sleeveHole', 'sleeve', 'armhole', 'und
 
 // Combine TOPS and PANTS/SKIRT for TERNO
 const ternoFields = [...new Set([...topsFields, ...pantsShortFields, ...skirtFields])];
+// Combine all fields for NO CATEGORY
+const allFields = [...new Set([
+  ...topsFields, 
+  ...pantsShortFields, 
+  ...skirtFields, 
+  ...dressFields
+])];
 
 export const sizeFields = {
+  'NO CATEGORY': allFields,
   TOPS: topsFields,
   'PANTS/SHORT': pantsShortFields,
   SKIRT: skirtFields,
   DRESS: dressFields,
-  TERNO: ternoFields, // New category
+  TERNO: ternoFields,
 };
 
 export const getLabel = (field) => {

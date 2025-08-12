@@ -164,7 +164,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
       setLoading(false);
     }
   };
-  
+
   // Add URL validation function
   const isValidUrl = (url) => {
     if (!url.trim()) return true; // Allow empty during editing
@@ -217,6 +217,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
               onChange={handleChange}
               label="Category"
             >
+              <MenuItem value="NO CATEGORY">No Category</MenuItem>
               <MenuItem value="TOPS">Tops</MenuItem>
               <MenuItem value="PANTS/SHORT">Pants/Short</MenuItem>
               <MenuItem value="SKIRT">Skirt</MenuItem>
